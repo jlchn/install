@@ -1,0 +1,2 @@
+[all]
+172.26.131.130      ansible_user=personalize ansible_ssh_pass=personalize

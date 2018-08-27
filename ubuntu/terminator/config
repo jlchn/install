@@ -11,8 +11,7 @@
   hide_window = F12
 [profiles]
   [[default]]
-    use_system_font = False
-    font = Hack 12
+    use_system_font = True
     visible_bell = True
     background_darkness = 0.84
     background_type = transparent

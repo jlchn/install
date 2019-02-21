@@ -71,3 +71,5 @@ Epoll* system calls help us to create and manage the context in the kernel:
 
 https://www.ulduzsoft.com/2014/01/select-poll-epoll-practical-difference-for-system-architects/
 
+https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/
+

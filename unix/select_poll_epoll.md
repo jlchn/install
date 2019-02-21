@@ -73,3 +73,6 @@ https://www.ulduzsoft.com/2014/01/select-poll-epoll-practical-difference-for-sys
 
 https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/
 
+https://medium.com/@copyconstruct/the-method-to-epolls-madness-d9d2d6378642
+
+https://blog.csdn.net/u011671986/article/details/79449853

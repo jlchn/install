@@ -1,0 +1,1 @@
+bash fetch.sh previous

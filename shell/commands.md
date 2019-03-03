@@ -101,6 +101,24 @@ diff -arq folder1 folder2
 git diff --no-index dir1/ dir2/
 ```
 
+### translate characters (tr)
+
+```
+# translate some character to the upper case
+echo "welcome to shanghai" | tr "az" "AZ" # welcome to shAnghAi
+echo "welcome to shanghai" | tr "a-z" "A-Z" # WELCOME TO SHANGHAI
+echo "welcome to shanghai" | tr "we" "aa" # aalcoma to shanghai
+echo "welcome to {shanghai}" | tr "{}" "()" # welcome to (shanghai)
+
+# squeeze repetition of characters using -s
+echo "welcome   to    {shanghai}" | tr -s " " "S" # welcomeStoS{shanghai}
+# delete specified characters using -d option
+echo "welcome   to    {shanghai}" | tr -d " " # welcometo{shanghai}
+# remove all the digits from the string
+echo "welcome  2  {shanghai}" | tr -d "[0-9]"
+echo "welcome  2  {shanghai}" | tr -d "[:digit:]"
+```
+
 ### rsync
 #### pull
 ```

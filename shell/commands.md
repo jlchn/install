@@ -1,7 +1,11 @@
 ### execution tracing
 
 ```
-bash -x 1.sh
+bash -x 1.sh # commandline
+
+set -x # enable execution tracing
+set +x # disable execution tracing
+
 ```
 
 ### variables

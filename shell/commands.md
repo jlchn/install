@@ -7,7 +7,16 @@ echo $v1 # get value of variable
 echo "$v1 and $v2"
 
 ```
+### printf
 
+printf is more powerful than echo
+
+```
+v1=1
+printf "$1\n" # printf will not help append \n after the string
+printf "hi %s, to be NO.%d" "Jackson" 1
+
+```
 
 ### show ports and process that owns them
 

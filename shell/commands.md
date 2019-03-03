@@ -116,7 +116,13 @@ echo "welcome   to    {shanghai}" | tr -s " " "S" # welcomeStoS{shanghai}
 echo "welcome   to    {shanghai}" | tr -d " " # welcometo{shanghai}
 # remove all the digits from the string
 echo "welcome  2  {shanghai}" | tr -d "[0-9]"
-echo "welcome  2  {shanghai}" | tr -d "[:digit:]"
+echo "welcome  2  {shanghai}" | tr -d "[:digit:]" 
+
+# opposite meaning of set1
+echo "The number is 12" | tr -cd [:digit:] # 12
+echo "aaabbb" | tr -c "a" "c" # aaaccc
+
+
 ```
 
 ### rsync

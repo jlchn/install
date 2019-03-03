@@ -1,3 +1,9 @@
+### execution tracing
+
+```
+bash -x 1.sh
+```
+
 ### variables
 
 ```

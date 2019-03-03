@@ -111,6 +111,14 @@ ls | tee file1 | sed 's/old/new/' #write to stdout, and also pass to a command
 ls | tee file1 file2 file3 #write the output to multiple files 
 ```
 
+### sort
+
+```
+sort -r -u -t : -k 5,5 /etc/passwd # unique sort in the reverse order using the values in the fifth column, using : as column delimeter
+sort -r -u -t : -k 5 -n /etc/passwd # the same with the above, but evaluate as numbers for comparison
+sort -t : -k3nr -k1 /etc/passwd # sort using the number values in the third column in reverse order, than sort using the values in the first column.
+```
+
 ### tar
 ```
 tar -cvf backup.tar /home/jenkins #create a tar

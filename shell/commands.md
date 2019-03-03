@@ -18,6 +18,22 @@ printf "hi %s, to be NO.%d" "Jackson" 1
 
 ```
 
+### standard inut, standard output, standard error
+
+the standard inut, standard output, standard error are all terminal, we can check by only using `cat` in the terminal and try to type anyting.
+
+```
+cat
+```
+
+### use > < >> to redirect the standard inut, standard output, standard error
+
+```
+cat < 1.sh
+cat < 1.sh >> 2.sh 
+```
+
+
 ### show ports and process that owns them
 
 ```

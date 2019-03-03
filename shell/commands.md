@@ -1,3 +1,13 @@
+### variables
+
+```
+v1=this_is_a_variable # there shouldn't be spaecs before or after =
+v2 = "this is a variable" use "" if there are blanks in the string
+echo $v1 # get value of variable
+echo "$v1 and $v2"
+
+```
+
 
 ### show ports and process that owns them
 

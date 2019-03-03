@@ -89,6 +89,17 @@ grep -r '172.26.131.131' . find recursively
 ```
 wc -l 
 ```
+
+### cut: get columns
+
+```
+ls -l | cut -c 1-10 # print first 10 character in each line
+ls -l | cut -c 1,10 # print the first and the tenth character in each line
+cut -d : -f 1,5 /etc/passwd # print the login name and full name of each user, using : as delimeter
+
+```
+
+
 ### tee
 used to store and view(at the same time) the output of any other command
 

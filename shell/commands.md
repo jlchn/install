@@ -166,3 +166,20 @@ case "${REMOTE_FILE_TYPE}" in
 
 esac
 ```
+
+### /dev/null
+
+a special file that data redirected to this file will be dropped by the os.
+
+it would be very useful if we only want the exit code of a program instead of the output.
+
+```
+if grep "test" 2.sh > /etc/null
+then
+        echo "1"
+else
+        echo "2"
+fi
+
+```
+

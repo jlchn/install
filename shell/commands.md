@@ -90,6 +90,12 @@ grep -r '172.26.131.131' . find recursively
 wc -l 
 ```
 
+find files bigger than 4MB
+
+```
+find . -type -f -size +4M
+```
+
 ### cut: get columns
 
 ```

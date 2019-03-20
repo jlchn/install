@@ -38,4 +38,31 @@ represent a  monotonically increasing counter(单调递增计数器) whose value
 ![counter with reset](../dist/p_counter_20190320161000.png?raw=true)
 
 
-usage: https://www.youtube.com/watch?v=67Ulrq6DxwA
+references
+- https://www.youtube.com/watch?v=67Ulrq6DxwA
+- https://www.robustperception.io/how-does-a-prometheus-counter-work
+
+#### Guage
+A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
+
+Gauges are typically used for measured values like temperatures or current memory usage
+
+#### Histogram
+A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets. It also provides a sum of all observed values.
+
+A histogram with a base metric name of <basename> exposes multiple time series during a scrape
+ - cumulative counters for the observation buckets, exposed as <basename>_bucket{le="<upper inclusive bound>"}
+ - the total sum of all observed values, exposed as <basename>_sum
+ - the count of events that have been observed, exposed as <basename>_count (identical to <basename>_bucket{le="+Inf"} above)
+  
+usages
+- https://povilasv.me/prometheus-tracking-request-duration/
+- https://prometheus.io/docs/practices/histograms/
+
+#### Summary
+Similar to a histogram, a summary samples observations (usually things like request durations and response sizes). While it also provides a total count of observations and a sum of all observed values, it calculates configurable quantiles over a sliding time window.
+
+A summary with a base metric name of <basename> exposes multiple time series during a scrape
+ - streaming φ-quantiles (0 ≤ φ ≤ 1) of observed events, exposed as <basename>{quantile="<φ>"}
+ - the total sum of all observed values, exposed as <basename>_sum
+ - the count of events that have been observed, exposed as <basename>_count

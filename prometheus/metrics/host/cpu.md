@@ -16,7 +16,17 @@ If an application tries to read from disk or write to network, it actually goes 
 
 iowait is the percentage of time the CPU is idle AND there is at least one I/O in progress.
 
+#### idle
+
+when there is really nothing the kernel can do, Technically, when the runnable queue is empty and there are no I/O operations going on, the CPU usage is marked as idle
+
 reference: https://blog.pregos.info/wp-content/uploads/2010/09/iowait.txt
+
+#### steal
+
+When running in a virtualized environment, the hypervisor may “steal” cycles that are meant for your CPUs and give them to another
+
+
 
 #### nice
 

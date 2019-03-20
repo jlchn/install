@@ -95,7 +95,7 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  
 ```
 #### mpstat
-https://www.tecmint.com/sysstat-commands-to-monitor-linux/
+https://linoxide.com/linux-command/linux-mpstat-command/
 
 ```
 mpstat

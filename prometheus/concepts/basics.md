@@ -35,7 +35,7 @@ When Prometheus scrapes a target, it attaches some labels automatically to the s
 
 represent a  monotonically increasing counter(单调递增计数器) whose value can only increase or be reset to zero after restart.
 
-![counter with reset] (../dist/p_counter_20190320161000.png)
+@[counter with reset](../dist/p_counter_20190320161000.png)
 
 
 usage: https://www.robustperception.io/how-does-a-prometheus-counter-work

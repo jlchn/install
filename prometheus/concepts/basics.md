@@ -23,7 +23,7 @@ instance 2: 1.2.3.4:5671
 instance 3: 5.6.7.8:5670
 instance 4: 5.6.7.8:5671
 ```
-#### Automatically generated labels and time series
+#### automatically generated labels and time series
 
 When Prometheus scrapes a target, it attaches some labels automatically to the scraped time series which serve to identify the scraped target
 - job: The configured job name that the target belongs to.
@@ -35,7 +35,7 @@ When Prometheus scrapes a target, it attaches some labels automatically to the s
 
 represent a  monotonically increasing counter(单调递增计数器) whose value can only increase or be reset to zero after restart.
 
-@[counter with reset](../dist/p_counter_20190320161000.png)
+![counter with reset](../dist/p_counter_20190320161000.png?raw=true)
 
 
-usage: https://www.robustperception.io/how-does-a-prometheus-counter-work
+usage: https://www.youtube.com/watch?v=67Ulrq6DxwA

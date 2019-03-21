@@ -106,6 +106,10 @@ Linux 4.15.0-46-generic (jiangli) 	03/20/2019 	_x86_64_	(4 CPU)
 ```
 
 
+### Metrics defined on top of Prometheus
 
-
+cpu usage : how many CPU times used in a second
+```
+sum (irate (node_cpu{job="node-exporter",mode=~"user|system",instance=~"$instance:9100"}[5m]) ) without(mode)
+```
 

@@ -113,3 +113,13 @@ cpu usage : how many CPU times used in a second
 sum (irate (node_cpu{job="node-exporter",mode=~"user|system",instance=~"$instance:9100"}[5m]) ) without(mode)
 ```
 
+### CPU Load
+
+by command `uptime` we can see the CPU load
+
+```
+03:29:16 up  2:48,  2 users,  load average: 0.00, 0.08, 0.10
+```
+
+https://scoutapp.com/blog/understanding-load-averages
+

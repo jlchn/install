@@ -26,6 +26,14 @@ reference: https://blog.pregos.info/wp-content/uploads/2010/09/iowait.txt
 
 When running in a virtualized environment, the hypervisor may “steal” cycles that are meant for your CPUs and give them to another
 
+AWS EC2 may have big steal time if you use Burstable Performance Instances.
+
+T2 instances are for workloads that don’t use the full CPU often or consistently, but occasionally need to burst.
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances.html
+
+http://mamchenkov.net/wordpress/2015/12/12/cpu-steal-time-now-on-amazon-ec2/
+
 #### nice
 
 Times when CPU is running below-normal priority tasks.

@@ -24,6 +24,8 @@ reference: https://blog.pregos.info/wp-content/uploads/2010/09/iowait.txt
 
 #### steal
 
+Steal time is the percentage of time a virtual CPU waits for a real CPU while the hypervisor is servicing another virtual processor.
+
 When running in a virtualized environment, the hypervisor may “steal” cycles that are meant for your CPUs and give them to another
 
 AWS EC2 may have big steal time if you use Burstable Performance Instances.

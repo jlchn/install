@@ -45,7 +45,7 @@ Times when CPU is running below-normal priority tasks.
 CPU is verving the interrupt requests.
 
 #### guest and guest nice
-he process (a hypervisor) is running a virtual CPU. These numbers are already included in user and nice.
+the percentage of time spent by the CPU or CPUs to run a virtual processor. These numbers are already included in user and nice.
 
 ### Get the Raw Values
 
@@ -105,7 +105,6 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  
 ```
 #### mpstat
-https://linoxide.com/linux-command/linux-mpstat-command/
 
 ```
 mpstat
@@ -113,6 +112,37 @@ Linux 4.15.0-46-generic (jiangli) 	03/20/2019 	_x86_64_	(4 CPU)
 
 03:00:17 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
 03:00:17 PM  all    4.50    0.01    1.79    0.73    0.00    0.07    0.00    0.00    0.00   92.91
+
+# print the usage of the first CPU
+mpstat -P 0
+
+Linux 4.15.0-46-generic (jiangli) 	03/28/2019 	_x86_64_	(4 CPU)
+
+03:27:22 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+03:27:22 PM    0   11.13    0.04    2.53    1.69    0.00    0.19    0.00    0.00    0.00   84.43
+
+# print the usage of ALL CPU
+mpstat -P ALL
+Linux 4.15.0-46-generic (jiangli) 	03/28/2019 	_x86_64_	(4 CPU)
+
+03:29:00 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+03:29:00 PM  all   11.11    0.04    2.58    2.01    0.00    0.15    0.00    0.00    0.00   84.12
+03:29:00 PM    0   11.13    0.04    2.53    1.68    0.00    0.19    0.00    0.00    0.00   84.43
+03:29:00 PM    1   10.92    0.04    2.60    1.53    0.00    0.14    0.00    0.00    0.00   84.77
+03:29:00 PM    2   11.21    0.03    2.58    2.97    0.00    0.13    0.00    0.00    0.00   83.07
+03:29:00 PM    3   11.18    0.04    2.59    1.85    0.00    0.13    0.00    0.00    0.00   84.20
+
+# show 4 reports about CPU utilization with 3 seconds intervals
+mpstat 3 4   
+Linux 4.15.0-46-generic (jiangli) 	03/28/2019 	_x86_64_	(4 CPU)
+
+03:30:39 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+03:30:42 PM  all    6.59    0.00    2.28    0.00    0.00    0.17    0.00    0.00    0.00   90.96
+03:30:45 PM  all    9.48    0.00    2.28    0.51    0.00    0.08    0.00    0.00    0.00   87.65
+03:30:48 PM  all   15.14    0.00    3.57    0.00    0.00    0.34    0.00    0.00    0.00   80.95
+03:30:51 PM  all   14.18    0.00    3.07    2.13    0.00    0.09    0.00    0.00    0.00   80.53
+Average:     all   11.33    0.00    2.80    0.66    0.00    0.17    0.00    0.00    0.00   85.04
+
 ```
 
 

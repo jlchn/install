@@ -20,3 +20,10 @@ Swap:            0          0          0
 
 21887460 (= actual-free - buffers - cached): total available RAM for new processes.
 
+
+the `Mem` line is on os' perspective, os see the buffers and cached are used memory.
+
+the `-/+ buffers/cache` line is on user applications' perspecitve, os will free buffer and cache when there is no enough space for user applications.
+
+
+

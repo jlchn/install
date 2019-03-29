@@ -43,3 +43,6 @@ dmesg | grep oom-killer
 > All logs that do not come from the kernel are sent as they are generated to the syslog daemon so they are not kept in any buffers. The kernel logs are also picked up by the syslog daemon as they are generated but they also continue to be saved (unnecessarily, arguably) to the ring buffer.
 
 sudo grep -i -r 'out of memory' /var/log/
+
+
+check `vm.overcommit_memory`

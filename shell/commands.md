@@ -1,3 +1,11 @@
+### add two integers
+
+```
+num=$(($num1 + $num2)) 
+num=$(awk "BEGIN {print $num1+$num2; exit}") # for floating point
+
+```
+
 ### execution tracing
 
 ```

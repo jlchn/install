@@ -227,3 +227,14 @@ fi
 
 ```
 
+### check if it is hard disk or SSD
+0 is SSD and i is the hard disk.
+
+```
+lsblk -d -o name,rota
+NAME ROTA
+xvda    0
+xvdf    0
+
+```
+

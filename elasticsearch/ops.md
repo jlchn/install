@@ -7,6 +7,26 @@ https://www.elastic.co/guide/en/elasticsearch/reference/6.2/_basic_concepts.html
 ### Running a cluster without replicas
 https://discuss.elastic.co/t/running-a-cluster-without-replicas/129846
 
+### segment
+
+https://stackoverflow.com/questions/15426441/understanding-segments-in-elasticsearch
+> OSs heavily cache data you write to a file. If the OS enforced every write to hit the drive, things would be very slow. fsync (among other things) allows you to control when the data should hit the drive.
+
+### fsync
+http://blog.httrack.com/blog/2013/11/15/everything-you-always-wanted-to-know-about-fsync/
+
+### segment merge
+ every search request has to check every segment in turn; the more segments there are, the slower the search will be.
+
+Elasticsearch solves this problem by merging segments in the background. Small segments are merged into bigger segments
+
+https://www.elastic.co/guide/en/elasticsearch/guide/current/merge-process.html
+
+### when new documents are searchable
+While indexing, the refresh process creates new segments and opens them for search.
+
+The merge process selects a few segments of similar size and merges them into a new bigger segment in the background. This does not interrupt indexing and searching.
+
 ### check status of the cluster
 ```
 curl -XGET 'http://localhost:9200/_cluster/health?pretty'

@@ -12,8 +12,13 @@ https://discuss.elastic.co/t/running-a-cluster-without-replicas/129846
 https://stackoverflow.com/questions/15426441/understanding-segments-in-elasticsearch
 > OSs heavily cache data you write to a file. If the OS enforced every write to hit the drive, things would be very slow. fsync (among other things) allows you to control when the data should hit the drive.
 
-### fsync
+### flush and fsync
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html
 http://blog.httrack.com/blog/2013/11/15/everything-you-always-wanted-to-know-about-fsync/
+
+### refresh and flush
+https://qbox.io/blog/refresh-flush-operations-elasticsearch-guide
 
 ### segment merge
  every search request has to check every segment in turn; the more segments there are, the slower the search will be.

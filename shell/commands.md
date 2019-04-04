@@ -91,6 +91,7 @@ history #history list
 grep 'warning\|error\|critical' /var/log/messages #find appearances in a file
 grep -w 'warning\|error\|critical' /var/log/messages #find words in a file
 grep -r '172.26.131.131' . find recursively
+grep -rnw '/path/to/somewhere/' -e 'some texts' # find text in folder files 
 ```
 ### line count
 

@@ -76,3 +76,8 @@ benchmark-test 1 p STARTED 439489 82.3mb 10.x.x.2 elasticsearch-1
 benchmark-test 0 p STARTED 440191 82.6mb 10.x.x.1 elasticsearch-0 
 benchmark-test 0 r STARTED 440191 82.4mb 10.x.x.3 elasticsearch-2
 ```
+
+
+### tunning
+
+https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/

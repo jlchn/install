@@ -47,6 +47,25 @@ This example also illustrates that waiting in line increases the latency for a p
 
 ```
 sudo apt-get install ioping
+ioping -c 10 .
+
+4 KiB <<< . (ext4 /dev/sda2): request=1 time=104.8 ms (warmup)
+4 KiB <<< . (ext4 /dev/sda2): request=2 time=1.31 s
+4 KiB <<< . (ext4 /dev/sda2): request=3 time=5.48 ms
+4 KiB <<< . (ext4 /dev/sda2): request=4 time=1.31 s
+4 KiB <<< . (ext4 /dev/sda2): request=5 time=458.0 ms
+4 KiB <<< . (ext4 /dev/sda2): request=6 time=774.3 ms
+4 KiB <<< . (ext4 /dev/sda2): request=7 time=375.3 ms
+4 KiB <<< . (ext4 /dev/sda2): request=8 time=174.3 ms
+4 KiB <<< . (ext4 /dev/sda2): request=9 time=1.57 s (slow)
+4 KiB <<< . (ext4 /dev/sda2): request=10 time=522.3 ms
+
+--- . (ext4 /dev/sda2) ioping statistics ---
+9 requests completed in 6.50 s, 36 KiB read, 1 iops, 5.54 KiB/s
+generated 10 requests in 10.7 s, 40 KiB, 0 iops, 3.73 KiB/s
+min/avg/max/mdev = 5.48 ms / 722.4 ms / 1.57 s / 522.7 ms
+
+
 ```
 
 references

@@ -77,3 +77,7 @@ https://theithollow.com/2013/11/18/disk-latency-concepts/
 ### throughput
 
 throughput is the `maximum` rate of production or the `maximum` rate at which something can be processed.
+
+### Steps to troubleshooting IO issues
+
+https://bencane.com/2012/08/06/troubleshooting-high-io-wait-in-linux/

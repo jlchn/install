@@ -49,4 +49,12 @@ This example also illustrates that waiting in line increases the latency for a p
 sudo apt-get install ioping
 ```
 
-references: https://louwrentius.com/understanding-iops-latency-and-storage-performance.html
+references
+
+https://louwrentius.com/understanding-iops-latency-and-storage-performance.html
+
+https://theithollow.com/2013/11/18/disk-latency-concepts/
+
+### throughput
+
+throughput is the `maximum` rate of production or the `maximum` rate at which something can be processed.

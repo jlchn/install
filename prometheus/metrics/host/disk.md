@@ -81,3 +81,8 @@ throughput is the `maximum` rate of production or the `maximum` rate at which so
 ### Steps to troubleshooting IO issues
 
 https://bencane.com/2012/08/06/troubleshooting-high-io-wait-in-linux/
+
+### How to solve IO issues
+
+https://scoutapm.com/blog/understanding-disk-i-o-when-should-you-be-worried?utm_source=weibolife.appspot.com
+

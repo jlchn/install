@@ -1,6 +1,8 @@
 
 ### simulate CPU intensive process
 
+Pay attention to the High usr time and low iowait time.
+
 ```
 # make one CPU 100% buzy
 stress --cpu 1 --timeout 600
@@ -45,8 +47,9 @@ Linux 4.15.0-46-generic (jiangli) 	03/28/2019 	_x86_64_	(4 CPU)
 
 ```
 
-### simulate io intensive processes
+### simulate IO intensive processes
 
+Pay attention to the High iowait time and low usr time.
 
 ```
 # create 3000 io workers

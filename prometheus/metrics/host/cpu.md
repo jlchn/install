@@ -159,6 +159,9 @@ sum (irate (node_cpu{job="node-exporter",mode=~"user|system",instance=~"$instanc
 
 the number of processes being executed by the CPU or in waiting state. 
 
+references: https://scoutapp.com/blog/understanding-load-averages
+
+
 #### the average load
 
 the average CPU load calculated over a given period of time of 1, 5 and 15 minutes.
@@ -223,11 +226,62 @@ CPU utilization tells how much time a CPU was running over a period time, for ex
 
 The average load indicates the average numbers of processes in running/ruanable and uninteruptable states. Which means it includes the processes running on CPU, waiting in the queue for CPU and waiting for I/O.
 
-CPU intensive tasks will make CPU in a high utilization mode, and it will also posibly make a high CPU load. 
+CPU intensive tasks will make CPU in a high utilization mode, and it will also posibly make a high CPU load. refers [here](https://github.com/jlchn/notes/blob/master/monitoring/performance_simulation.md) to check how to simulate CPU intensive tasks.
 
-IO intensive tasks will not make CPU in a high utilization mode, but it will make CPU in high load
+IO intensive tasks will not make CPU in a high utilization mode, but it will make CPU in high load. refers [here](https://github.com/jlchn/notes/blob/master/monitoring/performance_simulation.md) to check how to simulate IO intensive tasks.
 
-refers [here](https://github.com/jlchn/notes/blob/master/monitoring/performance_simulation.md) to check how to simulate CPU intensive tasks and IO intensive tasks.
+Too many processes are competing for CPU will also make CPU in high load, however, the CPU may be in high or low utilization. this is usually caused by the frequent CPU context swiching.
 
-references: https://scoutapp.com/blog/understanding-load-averages
+#### CPU average load and CPU context swiching
+
+##### CPU context and context switching
+
+CPU context means the values in the CPU registers and CPU program counter(PC), these values belong to one process, and before CPU running the next process, [(1) CPU suspends the execution of one process and saving the context somewhere in memory, (2) retrieving the context of the next process from memory and restoring it in the CPU's registers and PC in order to resume the process.](http://www.linfo.org/context_switch.html)
+
+When there are frequent context switching, the CPU will spend much time copying data from CPU registers and memory back and forth.
+
+##### 3 types of context switching
+
+1. process context switching
+
+The cost of process context switch comes from several aspects. 
+
+The processor registers need to be saved and restored, the OS kernel code (scheduler) must execute, the TLB need to be flushed.
+
+steps of context switching
+
+- save context of processor including program counter and other registers.
+- update the PCB of the running process with its new state and other associate information.
+- move PCB to appropriate queue – ready, blocked,
+- choose another process for execution.
+- update PCB of the selected process.
+- restore CPU context from that of the selected process.
+
+senarios when process switching happens
+
+- when process execution time slice exceeded, it is hang up by the system and waiting for next time slice.
+- when process needs to wait for the system resources(no enough memory etc..), it is hang up by the system
+- when process call sleep() to hang up itself.
+- when a high-priorigy process comes and the curreng process will be hang up
+- then hardware interuption has more priority than processes, when hardware inpteruption happens, the current process will be hang up.
+
+2. thread context switching
+
+in this case, the current running task and the next task belong to the same process. Switching between threads of a single process can be faster than between two separate processes, because threads share the same virtual memory maps, so a TLB flush is not necessary.
+
+3. system call context switching 
+
+in this case, the system call happen within one process or thread, no process or thread switch invoved.
+
+but system call will lead the cpu from user mode to kernel mode, which will lead to 2 context switchings(1. user code to kernel code before running kernel codes. 2. kernel codes to user codes after finishing running kernel codes).
+
+http://www.361way.com/linux-context-switch/5131.html
+
+https://time.geekbang.org/column/article/69859
+
+https://jusene.github.io/2018/12/16/context/
+
+https://blog.csdn.net/gatieme/article/details/51872659
+
+https://juejin.im/post/5c872a255188257e3f1afaef
 

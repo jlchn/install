@@ -275,6 +275,33 @@ in this case, the system call happen within one process or thread, no process or
 
 but system call will lead the cpu from user mode to kernel mode, which will lead to 2 context switchings(1. user code to kernel code before running kernel codes. 2. kernel codes to user codes after finishing running kernel codes).
 
+
+#### how to check whether context switching matters on CPU performance
+
+##### the overall statistics of context switching
+
+```
+$ vmstat 5 # print every 5 seconds
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0      0 448508  36744 381748    0    0    34     3   43   69  0  0 100  0  0
+ 0  0      0 448500  36744 381748    0    0     0     0   42   56  0  0 100  0  0
+ 0  0      0 448500  36744 381748    0    0     0     0   42   57  0  0 100  0  0
+ 0  0      0 448500  36744 381748    0    0     0     0   39   58  0  0 100  0  0
+ ```
+
+cs: context switching,  switching times in a single second
+
+in: interupt, interupt times in a single second
+
+r: running/runable, process numbers running CPU or waiting for CPU.
+
+b: blocked, uninteruptable process numbers.
+
+##### the process-specific statistics of context switching
+
+
+
 http://www.361way.com/linux-context-switch/5131.html
 
 https://time.geekbang.org/column/article/69859

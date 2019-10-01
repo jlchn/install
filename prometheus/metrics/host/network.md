@@ -26,3 +26,25 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 ```
 
 https://www.robustperception.io/how-much-of-the-time-is-my-network-usage-over-a-certain-amount
+
+### show active Internet connections
+
+- Recv-Q: receive queue in bytes
+- Send-Q: sent queue in bytes
+
+
+```
+netstat -a --inet
+
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:sunrpc          0.0.0.0:*               LISTEN
+tcp        0      0 0.0.0.0:http            0.0.0.0:*               LISTEN
+tcp        0      0 localhost:domain        0.0.0.0:*               LISTEN
+tcp        0      0 0.0.0.0:ssh             0.0.0.0:*               LISTEN
+tcp        0      0 192.168.0.107:ssh       realip.test:58106       ESTABLISHED
+udp        0      0 localhost:domain        0.0.0.0:*
+udp        0      0 192.168.0.107:bootpc    0.0.0.0:*
+udp        0      0 0.0.0.0:sunrpc          0.0.0.0:*
+udp        0      0 0.0.0.0:678             0.0.0.0:*
+```

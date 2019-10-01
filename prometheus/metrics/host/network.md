@@ -1,1 +1,28 @@
+## netstat
+
+### show network interfaces
+
+```
+netstat -ni # -n -> show numeric address instead of names
+
+Kernel Interface table
+Iface      MTU    RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg
+docker0   1500        0      0      0 0             0      0      0      0 BMU
+enp0s3    1500   113777      0      0 0         79996      0      0      0 BMRU
+lo       65536      152      0      0 0           152      0      0      0 LRU
+```
+
+### show route table
+
+```
+netstat -nr
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         192.168.0.1     0.0.0.0         UG        0 0          0 enp0s3
+172.17.0.0      0.0.0.0         255.255.0.0     U         0 0          0 docker0
+192.168.0.0     0.0.0.0         255.255.255.0   U         0 0          0 enp0s3
+192.168.0.1     0.0.0.0         255.255.255.255 UH        0 0          0 enp0s3
+```
+
 https://www.robustperception.io/how-much-of-the-time-is-my-network-usage-over-a-certain-amount

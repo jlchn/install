@@ -1,3 +1,0 @@
-``` bash
-mvn dependency:tree
-```

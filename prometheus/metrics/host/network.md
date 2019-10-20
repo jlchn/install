@@ -48,3 +48,10 @@ udp        0      0 192.168.0.107:bootpc    0.0.0.0:*
 udp        0      0 0.0.0.0:sunrpc          0.0.0.0:*
 udp        0      0 0.0.0.0:678             0.0.0.0:*
 ```
+
+## traceroute
+
+## nslookup
+
+## ping 
+

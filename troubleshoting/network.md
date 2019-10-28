@@ -126,6 +126,11 @@ IpExt:
 
 
 ```
+
+# ifconfig 
+
+# ip
+
 # arp tool
 
 # dns tool
@@ -134,6 +139,24 @@ IpExt:
 ## nslookup
 
 # ping 
+
+## ping commands
+
+## disable ping replies
+
+disable temprarly
+
+```shell
+echo "1" >  /proc/sys/net/ipv4/icmp_echo_ignore_all
+```
+
+disable permanently
+
+```shell
+vim  /etc/sysctl.conf 
+net.ipv4.icmp_echo_ignore_all = 1 # add to /etc/sysctl.conf 
+sysctl -p # enforce this setting immediately
+```
 
 # tcpdump
 

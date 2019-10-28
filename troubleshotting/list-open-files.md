@@ -211,8 +211,16 @@ $ sudo lsof -i -c java
 ```shell
 $ sudo lsof -i :8080
 ```
+### 15. list connections with remote server address
 
-### 15.list repeatly after n intervals
+```shell
+$ sudo lsof -i @172.26.143.255 # 172.26.143.255 is a remote server
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+nmbd    2364 root   18u  IPv4  34696      0t0  UDP 172.26.143.255:netbios-ns 
+nmbd    2364 root   20u  IPv4  34698      0t0  UDP 172.26.143.255:netbios-dgm
+```
+
+### 16.list repeatly after n intervals
 
 ```shell
 $ sudo lsof -i :8080 -r 3 # refresh the list every 3 seconds

@@ -5,7 +5,7 @@
 - Recv-Q: receive queue in bytes
 - Send-Q: sent queue in bytes
 
-```shell
+```bash
 
 netstat # without showing LISTENING state sockets
 netstat -a # show both listening and non-listening(for TCP this means established connections) sockets.
@@ -100,7 +100,7 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 
 ## show statistics of each protocol
 
-```shell
+```bash
 netstat -st # statistics of TCP
 netstat -su # statistics of UDP
 
@@ -136,7 +136,7 @@ IpExt:
 
 # ifconfig 
 
-```shell
+```bash
 ifconfig # show active interfaces
 ifconfig -a # show all interfaces
 ifconfig vethe6d8da9  # show specific interface
@@ -167,13 +167,13 @@ refer to [cheatsheet provided by Red Hat](./rh_ip_command_cheatsheet_1214_jcs_pr
 
 disable temprarly
 
-```shell
+```bash
 echo "1" >  /proc/sys/net/ipv4/icmp_echo_ignore_all
 ```
 
 disable permanently
 
-```shell
+```bash
 vim  /etc/sysctl.conf 
 net.ipv4.icmp_echo_ignore_all = 1 # add to /etc/sysctl.conf 
 sysctl -p # enforce this setting immediately
@@ -181,23 +181,57 @@ sysctl -p # enforce this setting immediately
 
 # tcpdump
 
-
-##  list of network interfaces available on the system
+## useful commands
 ``` bash
-tcpdump -D
-# 1.docker_gwbridge [Up, Running]
-# 2.eno1 [Up, Running]
-# 3.veth6795cc2 [Up, Running]
+tcpdump -D # list of network interfaces available on the system
+1.docker_gwbridge [Up, Running]
+2.eno1 [Up, Running]
+3.veth6795cc2 [Up, Running]
 
+tcpdump -i eth1 # capture packets from a particular interface
+
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eno1, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:51:20.262828 IP 47.246.1.46.https > jlchn.14600: Flags [P.], seq 2761970843:2761971846, ack 780016356, win 223, length 1003
+18:51:20.262871 IP jlchn.14600 > 47.246.1.46.https: Flags [.], ack 1003, win 202, length 0
+18:51:20.264933 IP jlchn.45244 > dns-sha.workslan.domain: 10314+ [1au] PTR? 21.143.26.172.in-addr.arpa. (55)
+18:51:20.265430 IP dns-sha.workslan.domain > jlchn.45244: 10314 NXDomain* 0/1/1 (108)
+18:51:20.265546 IP jlchn.45244 > dns-sha.workslan.domain: 10314+ PTR? 21.143.26.172.in-addr.arpa. (44)
+18:51:20.266012 IP dns-sha.workslan.domain > jlchn.45244: 10314 NXDomain* 0/1/0 (97)
+18:51:20.266864 IP jlchn.51190 > dns-sha.workslan.domain: 5368+ [1au] PTR? 46.1.246.47.in-addr.arpa. (53)
+18:51:22.246446 IP jlchn.55491 > 172.26.144.33.domain: 51434+ [1au] PTR? 1.131.26.172.in-addr.arpa. (54)
+18:51:22.256772 IP 172.26.143.106.59460 > 239.255.255.250.1900: UDP, length 172
+18:51:22.525097 IP jlchn.60427 > 172.26.144.33.domain: 52263+ [1au] PTR? 33.144.26.172.in-addr.arpa. (55)
+18:51:22.592502 IP 172.26.144.33.domain > jlchn.60427: 52263 NXDomain 0/1/1 (108)
+18:51:22.592666 IP jlchn.60427 > 172.26.144.33.domain: 52263+ PTR? 33.144.26.172.in-addr.arpa. (44)
+18:51:22.661533 IP 172.26.144.33.domain > jlchn.60427: 52263 NXDomain 0/1/0 (97)
+
+sudo tcpdump -i eno1 -c 5 # capture packets from a particular interface with limitted number
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eno1, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:52:35.931328 IP 172.26.143.117.59820 > 239.255.255.250.1900: UDP, length 174
+18:52:35.935230 IP jlchn.19687 > 172.26.144.33.domain: 11476+ [1au] PTR? 117.143.26.172.in-addr.arpa. (56)
+18:52:36.002526 IP 172.26.144.33.domain > jlchn.19687: 11476 NXDomain 0/1/1 (109)
+18:52:36.002651 IP jlchn.19687 > 172.26.144.33.domain: 11476+ PTR? 117.143.26.172.in-addr.arpa. (45)
+18:52:36.053118 IP 172.26.143.87.netbios-ns > 172.26.143.255.netbios-ns: NBT UDP PACKET(137): QUERY; REQUEST; BROADCAST
+5 packets captured
+24 packets received by filter
+13 packets dropped by kernel
+
+sudo tcpdump -i eno1 -c 5 -n # use IP instead of hostname
+sudo tcpdump -i eno1 -c 5 -n -tttt # display using readable time format
+sudo tcpdump -i eno1 -c 5 -XX # display captured packets in HEX and ASCII format
+sudo tcpdump -i eno1 -n -tttt tcp # capture specific protocol packages, available values are: tcp, udp, ip, ip6, arp, rarp etc.. 
+sudo tcpdump -i eth0 port 8080 # capture packages to specific port
+sudo tcpdump -i eno1 -n -tttt host 54.246.102.127 and tcp # capture TCP packets from or to particular IP
+sudo tcpdump -i eno1 -n -tttt src 54.246.102.127 and tcp # capture TCP packets from particular IP
+sudo tcpdump -i eno1 -n -tttt tcp and port 8443 and dst 54.246.102.127 # capture packets to particular destination IP and Port
+sudo tcpdump -i eno1 -n -tttt tcp and port 8443 and net 54.0.0.0/8 # capture TCP packets from or to particular network
+sudo tcpdump -i eno1 -n -tttt tcp and port 8443 and dst net 54.0.0.0/8 >0 # capture TCP packets to specific network based on package size
+sudo tcpdump  -i eno1 -n -tttt tcp and src 10.0.0.5 and dst port 8080 # capture TCP packets from 10.0.0.5(of any ports) to any destination of ports 8080
+sudo tcpdump -i eno1 -c 5 -w output.pcap # save captured packets in file
+sudo tcpdump -r /tmp/output.pcap  # save captured packets in file
 ```
-
-
-## tcpdump references
-
-https://danielmiessler.com/study/tcpdump/
-
-https://hackertarget.com/tcpdump-examples/
-
 
 # lsof 
 

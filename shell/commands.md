@@ -126,6 +126,16 @@ ls | tee file1 | sed 's/old/new/' #write to stdout, and also pass to a command
 ls | tee file1 file2 file3 #write the output to multiple files 
 ```
 
+### find the first n lines 
+
+```shell
+$ head -n 5 /etc/passwd # using head
+$ head -n 5 /etc/passwd /etc/hosts # check two files at the same time
+$ sed -n 1,5p /etc/passwd # using sed
+$ awk 'FNR <= 5' /etc/passwd # using awk
+
+```
+
 ### sort
 
 ```

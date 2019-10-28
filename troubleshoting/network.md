@@ -91,8 +91,6 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 192.168.0.1     0.0.0.0         255.255.255.255 UH        0 0          0 enp0s3
 ```
 
-https://www.robustperception.io/how-much-of-the-time-is-my-network-usage-over-a-certain-amount
-
 ## show statistics of each protocol
 
 ```shell

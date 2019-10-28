@@ -129,6 +129,18 @@ IpExt:
 
 # ifconfig 
 
+```shell
+ifconfig # show active interfaces
+ifconfig -a # show all interfaces
+ifconfig vethe6d8da9  # show specific interface
+ifconfig vethe6d8da9 down # disable an interface
+ifconfig vethe6d8da9 up # enable an interface
+ifconfig vethe6d8da9 192.168.2.2 # set an ip for this interface
+ifconfig vethe6d8da9 netmask 255.255.255.0 # change the network mask for this intercace
+ifconfig vethe6d8da9 promisc # enable promiscuous mode to drop the packet if the packet doesn't belong to itself. In promiscuous mode, the card accepts all the packets which flows through the network card. 
+ifconfig vethe6d8da9 -promisc # disable promiscuous mode
+```
+
 # ip
 
 # arp tool

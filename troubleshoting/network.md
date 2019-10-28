@@ -126,10 +126,12 @@ IpExt:
 
 
 ```
+# arp tool
 
-# traceroute
+# dns tool
+## traceroute
 
-# nslookup
+## nslookup
 
 # ping 
 

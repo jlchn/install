@@ -1,6 +1,8 @@
 ### display all processes
 ```shell 
-top
+top # display all
+top -p process-id # show specific process
+top -u user-name # show specific user
 ```
 
 - display processes with order
@@ -31,7 +33,7 @@ top
         - press `n`
         - enter a number, 0 indicates all
     - show/toggle idle/sleeping processes
-        - press `i`
+        - press `i`, i stands for idle
     - filter by custom criterias
         - press `o`
         - add filter expresssion

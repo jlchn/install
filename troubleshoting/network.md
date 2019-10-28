@@ -63,6 +63,13 @@ tcp        0      0 172.26.143.21:17276     52.84.229.159:443       ESTABLISHED 
 netstat -an | grep ':8080' # which process is using a particular port
 netstat -apn | grep 'java' # display specific process related sockets
 netstat -np --net -c # display repeatly
+netstat -nat|awk  '{print $6}'|sort|uniq -c|sort -rn # sumarize the status of sockets
+
+61 ESTABLISHED
+39 LISTEN
+9 LAST_ACK
+3 TIME_WAIT
+3 CLOSE_WAIT
 
 ```
 
@@ -142,6 +149,8 @@ ifconfig vethe6d8da9 -promisc # disable promiscuous mode
 ```
 
 # ip
+
+refer to [cheatsheet provided by Red Hat](./rh_ip_command_cheatsheet_1214_jcs_print.pdf).
 
 # arp tool
 

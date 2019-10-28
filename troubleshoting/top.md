@@ -42,5 +42,11 @@ top
     - press `f`
     - press `up/down` to navigate among items
     - press `d` to toggle show or hide
+    - press `right` to select the item, then `up/down` to change the order
+    - press `left` to de-select the current item
     - press `q` to quit and back to the process list
-    
+- split list
+    - press `A`
+    - each panel can be sorted on different column
+    - each panel can have different column fileds
+    - press `a` to move through the panels.

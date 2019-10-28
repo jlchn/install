@@ -1,3 +1,22 @@
+### display files 
+
+```shell
+ls -d # display directory only
+ls -t | head -1 # get last edited file(by last modified time)
+ls -rt # order last edited file in reverse order(by last modified time)
+ls -R # list in recursive way
+ls -1 # display one file name per line
+ls -h # display file size with human readable formats
+ls -i # display with inode number
+ls -n #display with uid and gid
+```
+
+### 
+
+```shell
+ls -1
+```
+
 ### add two integers
 
 ```

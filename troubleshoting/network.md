@@ -1,6 +1,6 @@
-## netstat
+# netstat
 
-### show network interfaces
+## show network interfaces
 
 ```
 netstat -ni # -n -> show numeric address instead of names
@@ -12,7 +12,7 @@ enp0s3    1500   113777      0      0 0         79996      0      0      0 BMRU
 lo       65536      152      0      0 0           152      0      0      0 LRU
 ```
 
-### show route table
+## show route table
 
 ```
 netstat -nr
@@ -27,7 +27,7 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 
 https://www.robustperception.io/how-much-of-the-time-is-my-network-usage-over-a-certain-amount
 
-### show active Internet connections
+## show active Internet connections
 
 - Recv-Q: receive queue in bytes
 - Send-Q: sent queue in bytes
@@ -49,13 +49,33 @@ udp        0      0 0.0.0.0:sunrpc          0.0.0.0:*
 udp        0      0 0.0.0.0:678             0.0.0.0:*
 ```
 
-## traceroute
+# traceroute
 
-## nslookup
+# nslookup
 
-## ping 
+# ping 
 
-## lsof 
+# tcpdump
+
+
+##  list of network interfaces available on the system
+``` bash
+tcpdump -D
+# 1.docker_gwbridge [Up, Running]
+# 2.eno1 [Up, Running]
+# 3.veth6795cc2 [Up, Running]
+
+```
+
+
+## tcpdump references
+
+https://danielmiessler.com/study/tcpdump/
+
+https://hackertarget.com/tcpdump-examples/
+
+
+# lsof 
 
 - please refer to [list open files](./list-open-files.md)
 

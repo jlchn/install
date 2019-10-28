@@ -181,7 +181,6 @@ sysctl -p # enforce this setting immediately
 
 # tcpdump
 
-## useful commands
 ``` bash
 tcpdump -D # list of network interfaces available on the system
 1.docker_gwbridge [Up, Running]

@@ -55,3 +55,7 @@ udp        0      0 0.0.0.0:678             0.0.0.0:*
 
 ## ping 
 
+## lsof 
+
+- please refer to [list open files](./list-open-files.md)
+

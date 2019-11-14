@@ -32,15 +32,38 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
 # Search 
 
 - full-text search
+    - search on one filed
     - search on all fields
-    - search on specific fields
-- structured search/term search
+    - search on specific/multiple fields
+    - fuzzy search
+    - search using wildcard
+    - search using regex
+    - match phrase search
+    - match phrase prefix search
+    - filter(bool query)
+    - query string search
+    - simple query string search
+- structured/term search
 - limit result
     - limit return fileds
     - limit return documents
 - boosting/optimizing filed score
+    - add boosting number
+    - add boosting script
 
 ## full-text search
+
+### search on one field
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+    "query": {
+        "match" : {
+            "query" : "guide" 
+        }
+    }
+}
+```
 
 ### search on all fields
 
@@ -68,30 +91,6 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 ```
 
 
-### bool query
-The AND/OR/NOT operators can be used to fine tune our search queries in order to provide more relevant or specific results. This is implemented in the search API as a bool query. The bool query accepts a must parameter (equivalent to AND), a must_not parameter (equivalent to NOT), and a should parameter (equivalent to OR). For example, if I want to search for a book with the word “Elasticsearch” OR “Solr” in the title, AND is authored by “clinton gormley” but NOT authored by “radu gheorge”
-
-```
-curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
-"query": {
-    "bool": {
-      "must": {
-        "bool" : {
-          "should": [
-            { "match": { "title": "Elasticsearch" }},
-            { "match": { "title": "Solr" }}
-          ],
-          "must": { "match": { "authors": "clinton gormely" }}
-        }
-      },
-      "must_not": { "match": {"authors": "radu gheorge" }}
-    }
-  }
-}'
-
-```
- a bool query can wrap any other query type including other bool queries to create arbitrarily complex or deeply nested queries
-
 ### fuzzy query
 
 Fuzzy matching can be enabled on Match and Multi-Match queries to catch spelling errors
@@ -113,7 +112,10 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 Instead of specifying "AUTO" you can specify the numbers 0, 1, or 2 to indicate the maximum number of edits that can be made to the string to find a match. The benefit of using "AUTO" is that it takes into account the length of the string. For strings that are only 3 characters long, allowing a fuzziness of 2 will result in poor search performance. Therefore it's recommended to stick to "AUTO" in most cases.
 
 ### wildcard query
- Wildcard queries allow you to specify a pattern to match instead of the entire term. ? matches any character and * matches zero or more characters.
+
+ Wildcard queries allow you to specify a pattern to match instead of the entire term. 
+ - ? matches any character
+ - * matches zero or more characters.
 
 ```
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
@@ -138,7 +140,6 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 
 ```
 
-
 ### match phrase query
 
 The match phrase query requires that all the terms in the query string be present in the document, be in the order specified in the query string and be close to each other. 
@@ -157,9 +158,177 @@ By default, the terms are required to be exactly beside each other but you can s
     }
 }
 '
+
+[Results]
+"hits": [
+      {
+        "_index": "bookdb_index",
+        "_type": "book",
+        "_id": "4",
+        "_score": 0.22327082,
+        "_source": {
+          "summary": "Comprehensive guide to implementing a scalable search engine using Apache Solr",
+          "title": "Solr in Action",
+          "publish_date": "2014-04-05"
+        }
+      },
+      {
+        "_index": "bookdb_index",
+        "_type": "book",
+        "_id": "1",
+        "_score": 0.16113183,
+        "_source": {
+          "summary": "A distibuted real-time search and analytics engine",
+          "title": "Elasticsearch: The Definitive Guide",
+          "publish_date": "2015-02-07"
+        }
+      }
+    ]
+    
 ```
 
-### term query
+### match phrase prefix search
+ 
+ for autocomplete feature
+ 
+```
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "match_phrase_prefix" : {
+            "summary": {
+                "query": "search en",
+                "slop": 3,
+                "max_expansions": 10
+            }
+        }
+    },
+    "_source": [ "title", "summary", "publish_date" ]
+}
+[Results]
+"hits": [
+      {
+        "_index": "bookdb_index",
+        "_type": "book",
+        "_id": "4",
+        "_score": 0.5161346,
+        "_source": {
+          "summary": "Comprehensive guide to implementing a scalable search engine using Apache Solr",
+          "title": "Solr in Action",
+          "publish_date": "2014-04-05"
+        }
+      },
+      {
+        "_index": "bookdb_index",
+        "_type": "book",
+        "_id": "1",
+        "_score": 0.37248808,
+        "_source": {
+          "summary": "A distibuted real-time search and analytics engine",
+          "title": "Elasticsearch: The Definitive Guide",
+          "publish_date": "2015-02-07"
+        }
+      }
+    ]
+```
+
+### bool query
+
+The AND/OR/NOT operators can be used to fine tune our search queries in order to provide more relevant or specific results. This is implemented in the search API as a bool query. The bool query accepts a must parameter (equivalent to AND), a must_not parameter (equivalent to NOT), and a should parameter (equivalent to OR). For example, if I want to search for a book with the word “Elasticsearch” OR “Solr” in the title, AND is authored by “clinton gormley” but NOT authored by “radu gheorge”
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+"query": {
+    "bool": {
+      "must": {
+        "bool" : {
+          "should": [
+            { "match": { "title": "Elasticsearch" }},
+            { "match": { "title": "Solr" }}
+          ],
+          "must": { "match": { "authors": "clinton gormely" }}
+        }
+      },
+      "must_not": { "match": {"authors": "radu gheorge" }}
+    }
+  }
+}'
+
+```
+ a bool query can wrap any other query type including other bool queries to create arbitrarily complex or deeply nested queries
+
+
+
+### query string
+
+The query_string query provides a means of executing multi_match queries, bool queries, boosting, fuzzy matching, wildcards, regexp, and range queries in a concise shorthand syntax. In the following example, we execute a fuzzy search for the terms “search algorithm” in which one of the book authors is “grant ingersoll” or “tom morton.” We search all fields but apply a boost of 2 to the summary field.
+
+```bash
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "query_string" : {
+            "query": "(saerch~1 algorithm~1) AND (grant ingersoll)  OR (tom morton)",
+            "fields": ["title", "authors" , "summary^2"]
+        }
+    },
+    "_source": [ "title", "summary", "authors" ],
+    "highlight": {
+        "fields" : {
+            "summary" : {}
+        }
+    }
+}
+[Results]
+"hits": [
+  {
+    "_index": "bookdb_index",
+    "_type": "book",
+    "_id": "2",
+    "_score": 3.571021,
+    "_source": {
+      "summary": "organize text using approaches such as full-text search, proper name recognition, clustering, tagging, information extraction, and summarization",
+      "title": "Taming Text: How to Find, Organize, and Manipulate It",
+      "authors": [
+        "grant ingersoll",
+        "thomas morton",
+        "drew farris"
+      ]
+    },
+    "highlight": {
+      "summary": [
+        "organize text using approaches such as full-text <em>search</em>, proper name recognition, clustering, tagging"
+      ]
+    }
+  }
+]
+
+```
+
+### simple query string
+
+The simple_query_string query is a version of the query_string query that is more suitable for use in a single search box that is exposed to users because it replaces the use of AND/OR/NOT with +/|/-, respectively, and it discards invalid parts of a query instead of throwing an exception if a user makes a mistake.
+
+```bash
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "simple_query_string" : {
+            "query": "(saerch~1 algorithm~1) + (grant ingersoll)  | (tom morton)",
+            "fields": ["title", "authors" , "summary^2"]
+        }
+    },
+    "_source": [ "title", "summary", "authors" ],
+    "highlight": {
+        "fields" : {
+            "summary" : {}
+        }
+    }
+}
+
+```
+
+## term query
 
 The term query finds documents that contain the exact term in the inverted index.
 

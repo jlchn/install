@@ -44,12 +44,17 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
     - query string search
     - simple query string search
 - structured/term search
+    - single term search
+    - multiple term search
+    - sorted term search
+    - ranged term search
 - limit result
     - limit return fileds
     - limit return documents
 - boosting/optimizing filed score
     - add boosting number
-    - add boosting script
+    - function score
+    - function scoring script
 
 ## full-text search
 
@@ -414,6 +419,55 @@ The third term query for the term foxes matches the full_text field.
 
 The fourth query is a match query, this match query on the full_text field first analyzes the query string, then looks for documents containing quick or foxes or both
 
+
+### mulitple terms
+
+```
+{
+    "query": {
+        "terms" : {
+            "publisher": ["oreilly", "packt"]
+        }
+    }
+}
+```
+
+### sorted term search 
+
+```
+
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "term" : {
+            "publisher": "manning"
+        }
+    },
+    "_source" : ["title","publish_date","publisher"],
+    "sort": [
+        { "publish_date": {"order":"desc"}}
+    ]
+}
+```
+
+### ranged term search
+
+```
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "range" : {
+            "publish_date": {
+                "gte": "2015-01-01",
+                "lte": "2015-12-31"
+            }
+        }
+    },
+    "_source" : ["title","publish_date","publisher"]
+}
+
+```
+
 ## limit results
 
 ### return specific fields and number of results
@@ -463,10 +517,8 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 
 while searching across multiple fields, we may want to highlight the importance of a certain field. 
 
-we can do this by adding a boosting number to that filed
 
-
-### increase the importance of the some field
+### increase the importance of an field by adding boosting number
 
 search without boosting number
 
@@ -491,6 +543,84 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
         },
         "_source": ["title","summary"]        
 }'
+```
+
+### function score
+
+Suppose that instead of wanting to boost incrementally by the value of a field, you have an ideal value you want to target and you want the boost factor to decay the further away you move from the value. This is typically useful in boosts based on lat/long, numeric fields like price, or dates. In our contrived example, we are searching for books on “search engines” ideally published around June 2014.
+
+```
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "function_score": {
+            "query": {
+                "multi_match" : {
+                    "query" : "search engine",
+                    "fields": ["title", "summary"]
+                }
+            },
+            "functions": [
+                {
+                    "exp": {
+                        "publish_date" : {
+                            "origin": "2014-06-15",
+                            "offset": "7d",
+                            "scale" : "30d"
+                        }
+                    }
+                }
+            ],
+            "boost_mode" : "replace"
+        }
+    },
+    "_source": ["title", "summary", "publish_date", "num_reviews"]
+}
+```
+### function score: script scoring
+
+we want to specify a script that takes into consideration the publish_date before deciding how much to factor in the number of reviews. Newer books may not have as many reviews yet so they should not be penalized for that.
+
+scoring script:
+```groovy
+
+publish_date = doc['publish_date'].value
+num_reviews = doc['num_reviews'].value
+if (publish_date > Date.parse('yyyy-MM-dd', threshold).getTime()) {
+  my_score = Math.log(2.5 + num_reviews)
+} else {
+  my_score = Math.log(1 + num_reviews)
+}
+return my_score
+```
+search dsl
+```bash
+
+POST /bookdb_index/book/_search
+{
+    "query": {
+        "function_score": {
+            "query": {
+                "multi_match" : {
+                    "query" : "search engine",
+                    "fields": ["title", "summary"]
+                }
+            },
+            "functions": [
+                {
+                    "script_score": {
+                        "params" : {
+                            "threshold": "2015-07-30"
+                        },
+                        "script": "publish_date = doc['publish_date'].value; num_reviews = doc['num_reviews'].value; if (publish_date > Date.parse('yyyy-MM-dd', threshold).getTime()) { return log(2.5 + num_reviews) }; return log(1 + num_reviews);"
+                    }
+                }
+            ]
+        }
+    },
+    "_source": ["title", "summary", "publish_date", "num_reviews"]
+}
+
 ```
 
 # References

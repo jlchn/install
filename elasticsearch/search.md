@@ -40,7 +40,7 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
     - search using regex
     - match phrase search
     - match phrase prefix search
-    - filter(bool query)
+    - bool query
     - query string search
     - simple query string search
 - structured/term search
@@ -48,6 +48,7 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
     - multiple term search
     - sorted term search
     - ranged term search
+- filter context vs query context
 - limit result
     - limit return fileds
     - limit return documents
@@ -468,6 +469,46 @@ POST /bookdb_index/book/_search
 
 ```
 
+## filter context vs query context
+
+- query context
+    - how well does this document match this query clause?
+    - the query clause also calculates a relevance score in the _score_ filed
+- filter context
+    - Does this document match this query clause?
+    - the answer is a simple `Yes` or `No` — no scores are calculated
+    - filter context is mostly used for filtering structured data(term search)
+        - Does this timestamp fall into the range 2015 to 2016?
+	- Is the status field set to "published"?
+    - filter context takes effects in
+        - `filter` or `must_not` parameters in the `bool` query
+	- the `filter` parameter in the `constant_score` query
+	- the `filter` aggregation
+
+```
+curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+  "query": {  //1
+    "bool": { //2
+      "must": [
+        { "match": { "title":   "Search"        }},
+        { "match": { "content": "Elasticsearch" }}
+      ],
+      "filter": [ //3
+        { "term":  { "status": "published" }},
+        { "range": { "publish_date": { "gte": "2015-01-01" }}}
+      ]
+    }
+  }
+}
+'
+
+```
+
+- The `query` parameter indicates query context
+- The `bool` and two `match` clauses are used in query context, which means that they are used to score how well each document matches.
+- The filter parameter indicates filter context, they will not affect the score for matching documents.
+
 ## limit results
 
 ### return specific fields and number of results
@@ -629,4 +670,4 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-q
 
 https://dzone.com/articles/23-useful-elasticsearch-example-queries
 
-
+https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html

@@ -485,6 +485,9 @@ POST /bookdb_index/book/_search
 	- the `filter` parameter in the `constant_score` query
 	- the `filter` aggregation
 
+
+__Use filter context instead of query context if possible.__
+
 ```
 curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
 {

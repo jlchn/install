@@ -38,6 +38,7 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
 - limit result
     - limit return fileds
     - limit return documents
+- boosting/optimizing filed score
 
 ## full-text search
 
@@ -291,9 +292,28 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 
 ## boosting/optimizing filed score
 
+while searching across multiple fields, we may want to highlight the importance of a certain field. 
+
+we can do this by adding a boosting number to that filed
+
+
 ### increase the importance of the some field
 
+search without boosting number
+
+```bash
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+        "query": {
+                "multi_match": {
+                        "query": "guide", "fields":["title","summary"]
+                }
+        },
+        "_source": ["title","summary"]        
+}'
 ```
+
+search with boosting number on field `title` 
+```bash
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
         "query": {
                 "multi_match": {

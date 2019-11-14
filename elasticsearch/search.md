@@ -1,5 +1,6 @@
+# Prepare the Test Data
 
-### create an index 
+## create an index 
 
 ```
 curl -X PUT "localhost:9200/books" -H 'Content-Type: application/json' -d'
@@ -14,7 +15,7 @@ curl -X PUT "localhost:9200/books" -H 'Content-Type: application/json' -d'
 '
 ```
 
-### bulk insert documents to the index
+## bulk insert documents to the index
 
 ```
 curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: application/json' -d'
@@ -28,8 +29,19 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
     { "title": "Solr in Action", "authors": ["trey grainger", "timothy potter"], "summary" : "Comprehensive guide to implementing a scalable search engine using Apache Solr", "publish_date" : "2014-04-05", "num_reviews": 23, "publisher": "manning" }
 '
 ```
+# Search 
 
-### full-text search(match): search on all fields
+- full-text search
+    - search on all fields
+    - search on specific fields
+- structured search/term search
+- limit result
+    - limit return fileds
+    - limit return documents
+
+## full-text search
+
+### search on all fields
 
 ```
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
@@ -41,7 +53,7 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 }
 ```
 
-### search on specific fileds
+### search on multiple/specific fileds
 ```
  curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
     "query": {
@@ -54,58 +66,6 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 '
 ```
 
-### return specific fields and number of results
-
-```
-curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
-        "query": {
-                "match": {
-                        "title": "in action"
-                }
-        },
-        "size": 1,
-        "from": 0,
-        "_source": ["title"]
-}'
-{
-  "took" : 2,
-  "timed_out" : false,
-  "_shards" : {
-    "total" : 3,
-    "successful" : 3,
-    "skipped" : 0,
-    "failed" : 0
-  },
-  "hits" : {
-    "total" : 2,
-    "max_score" : 1.7427701,
-    "hits" : [
-      {
-        "_index" : "books",
-        "_type" : "_doc",
-        "_id" : "4",
-        "_score" : 1.7427701,
-        "_source" : {
-          "title" : "Solr in Action"
-        }
-      }
-    ]
-  }
-}
-
-```
-### increase the importance of the some field
-
-```
-curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
-        "query": {
-                "multi_match": {
-                        "query": "guide", "fields":["title","summary^3"]
-                }
-        },
-        "_source": ["title","summary"]        
-}'
-```
 
 ### bool query
 The AND/OR/NOT operators can be used to fine tune our search queries in order to provide more relevant or specific results. This is implemented in the search API as a bool query. The bool query accepts a must parameter (equivalent to AND), a must_not parameter (equivalent to NOT), and a should parameter (equivalent to OR). For example, if I want to search for a book with the word “Elasticsearch” OR “Solr” in the title, AND is authored by “clinton gormley” but NOT authored by “radu gheorge”
@@ -284,8 +244,67 @@ The third term query for the term foxes matches the full_text field.
 
 The fourth query is a match query, this match query on the full_text field first analyzes the query string, then looks for documents containing quick or foxes or both
 
+## limit results
 
-### References
+### return specific fields and number of results
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+        "query": {
+                "match": {
+                        "title": "in action"
+                }
+        },
+        "size": 1,
+        "from": 0,
+        "_source": ["title"]
+}'
+
+[result:]
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 3,
+    "successful" : 3,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 1.7427701,
+    "hits" : [
+      {
+        "_index" : "books",
+        "_type" : "_doc",
+        "_id" : "4",
+        "_score" : 1.7427701,
+        "_source" : {
+          "title" : "Solr in Action"
+        }
+      }
+    ]
+  }
+}
+
+```
+
+## boosting/optimizing filed score
+
+### increase the importance of the some field
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+        "query": {
+                "multi_match": {
+                        "query": "guide", "fields":["title","summary^3"]
+                }
+        },
+        "_source": ["title","summary"]        
+}'
+```
+
+# References
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html
 

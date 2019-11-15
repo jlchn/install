@@ -1,3 +1,19 @@
+### start a cluster on a single host for local development
+
+```bash
+bin/elasticsearch -E cluster.name=c1 -E node.name=node1 -E path.data=node1_data -d
+bin/elasticsearch -E cluster.name=c1 -E node.name=node2 -E path.data=node2_data -d
+bin/elasticsearch -E cluster.name=c1 -E node.name=node3 -E path.data=node3_data -d
+```
+
+### plugin management
+
+```
+bin/elasticsearch-plugin list # check installed plugin on a node by using command line
+curl http://localhost:9200/_cat/plugins  # check installed plugin on a node by using curl
+bin/elasticsearch-plugin install analysis-icu  # install a plugin 
+```
+
 ### shards and replicas
 
 https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch

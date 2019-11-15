@@ -13,10 +13,90 @@ bin/elasticsearch-plugin list # check installed plugin on a node by using comman
 curl http://localhost:9200/_cat/plugins  # check installed plugin on a node by using curl
 bin/elasticsearch-plugin install analysis-icu  # install a plugin 
 ```
+### cluster node
+
+```
+get _cat/nodes?v 
+
+ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+127.0.0.1           21          98  11    0.77    1.19     1.19 dilm      *      node1
+127.0.0.1           21          98  11    0.77    1.19     1.19 dilm      -      node3
+127.0.0.1           15          98  11    0.77    1.19     1.19 dilm      -      node2
+
+
+```
+#### node metadata
+
+- node name
+- node id
+
+#### node role
+- master node
+    - only master node can change the cluster state information(even though all nodes has a copy of cluster information)
+        - cluster information
+            - all nodes information
+            - all indices informtion, and its settings and mappings
+            - shard routing information
+- master eligible node
+    - only master eligible nodes can participate in the leader selection and becomes a master node if it wins.
+    - by default, every node is master eligible
+    - set `node.master: false` to disable this role
+- data node: keeping the shards and replicas.
+- ingest node: pre-process documents before the actual document indexing happens
+    - all nodes enable ingest by default
+- coordinating node: receive the request from client, distribute the request to other nodes, collect the results and send it back to the client.
+    - by default, every node is cooridinating node. to create a coordinating __ONLY__ node, set below:
+        - node.master=false
+        - node.data=false
+        - node.ingest=false.
+
+
+#### hot&warm node
+
+日志类型的应用, 旧日志用配置低的机型, 用于节省成本.
+
+see https://www.elastic.co/blog/implementing-hot-warm-cold-in-elasticsearch-with-index-lifecycle-management
+
+### cluster health
+
+```
+GET /_cluster/health
+GET /_cluster/health?level=shards
+GET /_cluster/health/movies,kibana_sample_data_flights
+GET /_cluster/health/movies?level=shards
+```
+
 
 ### shards and replicas
 
 the docs inside of an index seperated into different shards
+
+
+below will tell the detailed view of what nodes contain which shards, and it will tell if it’s a primary or replica
+```
+GET _cat/shards?v
+
+index                           shard prirep state    docs   store ip        node
+movies                          0     p      STARTED  9743   1.4mb 127.0.0.1 node3
+movies                          0     r      STARTED  9743   1.3mb 127.0.0.1 node2
+.monitoring-kibana-7-2019.11.15 0     r      STARTED    87 238.6kb 127.0.0.1 node3
+.monitoring-kibana-7-2019.11.15 0     p      STARTED     3 133.6kb 127.0.0.1 node1
+.kibana_task_manager_1          0     r      STARTED     2  12.5kb 127.0.0.1 node2
+.kibana_task_manager_1          0     p      STARTED     2  12.5kb 127.0.0.1 node1
+kibana_sample_data_ecommerce    0     p      STARTED  4675   4.5mb 127.0.0.1 node3
+kibana_sample_data_ecommerce    0     r      STARTED  4675   4.8mb 127.0.0.1 node2
+kibana_sample_data_flights      0     r      STARTED 13059   6.3mb 127.0.0.1 node3
+kibana_sample_data_flights      0     p      STARTED 13059   6.3mb 127.0.0.1 node1
+.apm-agent-configuration        0     p      STARTED     0    283b 127.0.0.1 node3
+.apm-agent-configuration        0     r      STARTED     0    283b 127.0.0.1 node2
+kibana_sample_data_logs         0     p      STARTED 14074  11.1mb 127.0.0.1 node2
+kibana_sample_data_logs         0     r      STARTED 14074  11.3mb 127.0.0.1 node1
+.kibana_1                       0     p      STARTED   167     1mb 127.0.0.1 node3
+.kibana_1                       0     r      STARTED   167     1mb 127.0.0.1 node1
+.monitoring-es-7-2019.11.15     0     p      STARTED    93     3mb 127.0.0.1 node2
+.monitoring-es-7-2019.11.15     0     r      STARTED  1521   3.4mb 127.0.0.1 node1
+
+```
 
 https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch
 
@@ -50,55 +130,6 @@ While indexing, the refresh process creates new segments and opens them for sear
 
 The merge process selects a few segments of similar size and merges them into a new bigger segment in the background. This does not interrupt indexing and searching.
 
-### check status of the cluster
-```
-curl -XGET 'http://localhost:9200/_cluster/health?pretty'
-{
-  "cluster_name" : "es_cluster",
-  "status" : "green",
-  "timed_out" : false,
-  "number_of_nodes" : 3,
-  "number_of_data_nodes" : 3,
-  "active_primary_shards" : 89,
-  "active_shards" : 193,
-  "relocating_shards" : 0,
-  "initializing_shards" : 0,
-  "unassigned_shards" : 0,
-  "delayed_unassigned_shards" : 0,
-  "number_of_pending_tasks" : 0,
-  "number_of_in_flight_fetch" : 0,
-  "task_max_waiting_in_queue_millis" : 0,
-  "active_shards_percent_as_number" : 100.0
-}
-
-```
-
-### list all indices
-
-```
-curl -XGET 'http://localhost:9200/_cat/indices?v' 
-
-```
-
-### list which node contains which shards
-
- below will tell the detailed view of what nodes contain which shards, and it will tell if it’s a primary or replica
-
-```
-curl -X GET "localhost:9200/_cat/shards?v"
-...
-curl -XGET 'http://localhost:9200/_cat/shards/index-name'
-benchmark-test 2 p STARTED 439717 82.5mb 10.x.x.1 elasticsearch-0 
-benchmark-test 2 r STARTED 439717 82.8mb 10.x.x.3 elasticsearch-2 
-benchmark-test 4 r STARTED 439937 82.6mb 10.x.x.1 elasticsearch-0 
-benchmark-test 4 p STARTED 439937 82.5mb 10.x.x.2 elasticsearch-1 
-benchmark-test 3 p STARTED 438796 82.6mb 10.x.x.1 elasticsearch-0 
-benchmark-test 3 r STARTED 438796 82.9mb 10.x.x.2 elasticsearch-1 
-benchmark-test 1 r STARTED 439489 82.3mb 10.x.x.3 elasticsearch-2 
-benchmark-test 1 p STARTED 439489 82.3mb 10.x.x.2 elasticsearch-1 
-benchmark-test 0 p STARTED 440191 82.6mb 10.x.x.1 elasticsearch-0 
-benchmark-test 0 r STARTED 440191 82.4mb 10.x.x.3 elasticsearch-2
-```
 
 
 ### tunning

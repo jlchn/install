@@ -16,6 +16,8 @@ bin/elasticsearch-plugin install analysis-icu  # install a plugin
 
 ### shards and replicas
 
+the docs inside of an index seperated into different shards
+
 https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch
 
 https://www.elastic.co/guide/en/elasticsearch/reference/6.2/_basic_concepts.html

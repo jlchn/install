@@ -65,12 +65,15 @@ GET /_cluster/health?level=shards
 GET /_cluster/health/movies,kibana_sample_data_flights
 GET /_cluster/health/movies?level=shards
 ```
-
+green: 主分片和副本都正常分配
+yellow: 主分片正常分配, 副本分配未能正常分配
+red: 有主分片未能正常分配, 例如,在磁盘容量少于15%时尝试创建index
 
 ### shards and replicas
 
 the docs inside of an index seperated into different shards
 
+Each Elasticsearch shard is a Lucene index.
 
 below will tell the detailed view of what nodes contain which shards, and it will tell if it’s a primary or replica
 ```
@@ -98,6 +101,48 @@ kibana_sample_data_logs         0     r      STARTED 14074  11.3mb 127.0.0.1 nod
 
 ```
 
+
+shard分类
+- primary shard
+    - 解决水平扩展的问题, 通过主分片,可以将一个index中的数据分散到不同的节点中
+    - 在创建index的时候就设定
+    - 分片数一旦指定, 将不能修改, 除非re-index
+        - 原因: 各个节点通过分片个数寻找doc在那个节点(分片)上.
+- replica shard
+    - 是一个主分片的拷贝
+    - 解决数据高可用的问题, 当某个住分片丢失或者损坏时, 不会导致数据丢失, 也不会影响对分片的读写( horizontally split/scale your content volume)
+    - 副本个数可以动态改变
+    - 增加副本数量, 可以提高读取的吞吐量.( distribute and parallelize operations across shards)
+
+the master node will not assign a primary shard to the same node as its replica.
+
+the master node will not assign two replicas of the same shard to the same node. 
+
+考虑三个节点时:
+- 每个index设定一个shard, 每个shard有一个replica: shard和replica可以分配到不同的node上, 集群 green
+- 每个index设定一个shard, 每个shard有三个replica: 有一个replica节点无法分配, 因为该index的shard和另外两个replica已经占用了所有节点, 集群 yellow
+- 每个index设定四个shard, 每个shard有两个replica: 所有shard都可以分配
+- 每个index设定四个shard, 每个shard有三个replica: 有四个replica节点无法分配, 每一个primary shard的一个replica无法分配, 集群 yellow
+- 每个index设定100个shard, 每个shard有两个replica: 所有shard都可以分配
+
+![4 shards and 3 replicas for each shard](replica-4-3.png "4 shards and 3 replicas for each shard")
+![100 shards and 2 replicas for each shard](replica-100-2.png "100 shards and 2 replicas for each shard")
+
+keep in mind: N(Node) >= R(Replica) + 1, shard 的个数不会影响allocation的成败, 但是 replica会.
+
+
+use `get /_cluster/allocation/explain?pretty` to see why replica are not allocated.
+
+shard(主分片) 容量规划
+
+- shard 数量太小
+    - 因为不能动态调整分片数量, 当数据越来越多时,数据只能分布在现有的分片中, 最终导致每个分片的数据量过大
+        - 数据量过大会有什么问题?
+            - 数据分配时更加耗时
+- shard 数量过大
+        - 
+            
+            
 https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch
 
 https://www.elastic.co/guide/en/elasticsearch/reference/6.2/_basic_concepts.html

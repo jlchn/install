@@ -137,17 +137,43 @@ GET /users/_mget
 
 ## full-text search
 
+
 ### search on one field
 
 ```
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
     "query": {
         "match" : {
-            "query" : "guide" 
+            "title" : "guide" 
         }
     }
 }
 ```
+below will get the documents with fileds containing `final` or `guide` or `final and guide`
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+    "query": {
+        "match" : {
+            "title" : "final guide" 
+        }
+    }
+}
+```
+
+below will get the documents with fileds must contain `final` and `guide`
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+    "query": {
+        "match" : {
+            "title" : {
+	    	"query":"final guide",
+		"operator":"AND"
+	    } 
+        }
+    }
+}
 
 ### search on all fields
 
@@ -156,6 +182,17 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
     "query": {
         "multi_match" : {
             "query" : "guide" 
+        }
+    }
+}
+```
+### search multiple words
+
+```
+curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
+    "query": {
+        "multi_match" : {
+            "query" : "final guide" 
         }
     }
 }

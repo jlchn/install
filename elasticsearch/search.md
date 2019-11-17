@@ -48,6 +48,7 @@ POST users/_update/1
 }
 
 DELETE users/_doc/1
+
 ```
 
 ## bulk insert documents to the index
@@ -64,6 +65,42 @@ curl -X PUT "localhost:9200/books/_doc/_bulk?pretty" -H 'Content-Type: applicati
     { "title": "Solr in Action", "authors": ["trey grainger", "timothy potter"], "summary" : "Comprehensive guide to implementing a scalable search engine using Apache Solr", "publish_date" : "2014-04-05", "num_reviews": 23, "publisher": "manning" }
 '
 ```
+
+## bulk get
+
+```
+GET /_mget
+{
+    "docs" : [
+        {
+            "_index" : "users",
+            "_id" : "1"
+        },
+        {
+            "_index" : "users-2",
+            "_id" : "2"
+        }
+    ]
+}
+
+GET /users/_mget
+{
+    "docs" : [
+        {
+
+            "_id" : "1"
+        },
+        {
+
+            "_id" : "2"
+        }
+    ]
+}
+
+```
+
+
+
 # Search 
 
 - full-text search

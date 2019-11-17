@@ -1,6 +1,8 @@
-todo
+# todo
 
-search from multiple indices.
+- search from multiple indices.
+-  score calculation
+
 
 # Document CURD
 

@@ -1,5 +1,54 @@
-# Prepare the Test Data
+# Document CURD
 
+## basic curd
+
+```
+# create a document with a auto-generated id
+POST users/_doc
+{
+	"user" : "Mike",
+    "post_date" : "2019-04-15T14:12:12",
+    "message" : "trying out Kibana"
+}
+
+# create a document with a specified id, if there the id is already exist, an error would throw
+PUT users/_doc/1?op_type=create
+{
+	"user" : "Jack",
+    "post_date" : "2019-04-15T14:12:12",
+    "message" : "trying out elasticsearch"
+}
+
+# create a document with a specified id, if there the id is already exist, an error would throw
+PUT users/_create/1
+{
+	"user" : "Jack",
+    "post_date" : "2019-04-15T14:12:12",
+    "message" : "trying out elasticsearch"
+}
+
+GET users/_doc/1
+
+
+# update a document, es will first delete the existing doc, then create the new doc, the version of new document increases by 1.
+PUT users/_doc/1
+{
+	"user" : "Jack",
+    "post_date" : "2019-04-15T14:12:12",
+    "message" : "trying out elasticsearch"
+}
+
+# add new fields to existing documents or update the existing fields, the version of new document increases by 1.
+POST users/_update/1
+{
+    "doc":{
+        "release_date" : "2019-05-15T14:12:12",
+        "message" : "new message"
+    }
+}
+
+DELETE users/_doc/1
+```
 
 ## bulk insert documents to the index
 

@@ -523,7 +523,7 @@ First query matches because the exact_value field contains the exact term Quick 
 
 The second query does not match, because the full_text field only contains the terms quick and foxes. It does not contain the exact term Quick Foxes!.
 
-The third term query for the term foxes matches the full_text field.
+The third term query for the term foxes matches the full_text field. but be sure to [Avoid using the term query for text fields](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html)
 
 The fourth query is a match query, this match query on the full_text field first analyzes the query string, then looks for documents containing quick or foxes or both
 

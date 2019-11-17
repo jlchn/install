@@ -269,6 +269,33 @@ GET /_analyze
 
 ### tokenizer
 
+
+```
+GET /_analyze
+{
+    "tokenizer": "whitespace",
+    "text": "<p>He's mother said: \"THIS-is a <b>No.1</b> 主意.\"</p>"
+}
+
+# html elements shown because no char_filter is specified
+=> [<p>He's, mother, said:, "THIS-is, a, <b>No.1</b>, 主意.\"</p>]
+
+```
+
+### token filters
+
+```
+GET /_analyze
+{
+    "tokenizer": "whitespace",
+    "filter": ["stop", "lowercase"],
+    "text": "<p>He's mother said: \"THIS-is a <b>No.1</b> 主意.\"</p>"
+}
+
+=> [<p>he's, mother, said:, "this-is, <b>No.1</b>, 主意.\"</p>]
+```
+
+
 ### analyzer 
 ```
 GET /_analyze
@@ -346,3 +373,47 @@ GET /_analyze
 
 [p 这个, 苹果, 挺好吃, 好吃, 好吃, 的, p]
 ```
+
+### costimize an analyzer
+
+```bash 
+PUT /my_index
+{
+    "settings":{
+        "analysis":{
+            "char_filter":{
+                "&_to_and":{
+                    "type":"mapping",
+                    "mappings":[
+                        "&=> and "
+                    ]
+                }
+            },
+            "filter":{
+                "my_stopwords":{
+                    "type":"stop",
+                    "stopwords":[
+                        "the",
+                        "a"
+                    ]
+                }
+            },
+            "analyzer":{
+                "my_analyzer":{
+                    "type":"custom",
+                    "char_filter":[
+                        "html_strip",
+                        "&_to_and"
+                    ],
+                    "tokenizer":"standard",
+                    "filter":[
+                        "lowercase",
+                        "my_stopwords"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+

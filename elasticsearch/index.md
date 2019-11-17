@@ -236,7 +236,40 @@ the build-in analyzers in Elasticsearch
 
 ### analyzer API
 
-### 
+
+### characture filter
+
+```bash
+
+GET /_analyze
+{
+    "char_filter": ["html_strip"], 
+    "tokenizer": "keyword",
+    "text": "<p>He's mother said: \"THIS-is a <b>No.1</b> 主意.\"</p>"
+}
+
+=> He's mother said: "THIS-is a No.1 主意."
+
+GET /_analyze
+{
+    "char_filter": [
+      {
+      "type": "mapping", 
+      "mappings": ["mother => father"]
+      }
+    ], 
+    "tokenizer": "keyword",
+    "text": "<p>He's mother said: \"THIS-is a <b>No.1</b> 主意.\"</p>"
+}
+
+=> "<p>He's father said: "THIS-is a <b>No.1</b> 主意."</p>
+
+
+```
+
+### tokenizer
+
+### analyzer 
 ```
 GET /_analyze
 {

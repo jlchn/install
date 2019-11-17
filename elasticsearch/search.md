@@ -175,17 +175,7 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
     }
 }
 
-### search on all fields
 
-```
-curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
-    "query": {
-        "multi_match" : {
-            "query" : "guide" 
-        }
-    }
-}
-```
 ### search multiple words
 
 ```
@@ -199,6 +189,7 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 ```
 
 ### search on multiple/specific fileds
+
 ```
  curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
     "query": {
@@ -216,7 +207,7 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 
 Fuzzy matching can be enabled on Match and Multi-Match queries to catch spelling errors
 
-```
+```bash
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
 "query": {
         "multi_match" : {                   
@@ -238,7 +229,7 @@ Instead of specifying "AUTO" you can specify the numbers 0, 1, or 2 to indicate 
  - ? matches any character
  - * matches zero or more characters.
 
-```
+```bash
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
 "query": {
            "wildcard":{"authors":"t*"}
@@ -250,7 +241,7 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 
 ### regexp query
 
-```
+```bash
 
 curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/json' -d '{
 "query": {
@@ -376,7 +367,8 @@ curl -X GET "localhost:9200/books/_search?pretty" -H 'Content-Type: application/
 }'
 
 ```
- a bool query can wrap any other query type including other bool queries to create arbitrarily complex or deeply nested queries
+
+a bool query can wrap any other query type including other bool queries to create arbitrarily complex or deeply nested queries
 
 
 

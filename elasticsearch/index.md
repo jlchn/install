@@ -123,9 +123,9 @@ before 7.0, an index can be defined with many kind of Types,
 after 7.0, type can only be `_doc`, see https://www.elastic.co/guide/en/elasticsearch/reference/6.0/removal-of-types.html for more information
 
 
-## the reverse index
+## the inverted index
 
-the reverse index consists of a term dictionary and a posting list(倒排列表)
+the Inverted index consists of a term dictionary and a posting list(倒排列表)
 - term dictionary
     - B+ tree or HashMap to keep the term
 - posting list
@@ -133,7 +133,8 @@ the reverse index consists of a term dictionary and a posting list(倒排列表)
     - term frequency: how many times does this term appear in each documents, this is useful for search score calculating.
     - term position: the positions the term in the document, this is useful for phrase query.
     - offset: the start and end of this term, this is useful for highlight the term in the search result.
-
+- inverted file
+    - the file storing the posting list.
 let's say we have 3 documents:
 ```
 Document 1: hello world

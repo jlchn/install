@@ -33,6 +33,7 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 #### node role
 - master node
     - only master node can create/delete or update index information.
+    - only master node can coordinate the create/delete or update operations on documents.
     - only master node can change the cluster state information(even though all nodes has a copy of cluster information)
         - cluster information
             - all nodes information
@@ -115,7 +116,8 @@ kibana_sample_data_logs         0     r      STARTED 14074  11.3mb 127.0.0.1 nod
 
 shard分类
 - primary shard
-    - 解决水平扩展的问题, 通过主分片,可以将一个index中的数据分散到不同的节点中
+    - 解决水平扩展的问题, 通过主分片,可以将一个index中的数据分散到不同的节点中.
+    - 对文档的新建、索引和删除请求都是写操作，必须在主分片上面完成之后才能被复制到相关的副本分片。(由master主导)
     - 在创建index的时候就设定
     - 分片数一旦指定, 将不能修改, 除非re-index
         - 原因: 各个节点通过分片个数寻找doc在那个节点(分片)上.
@@ -124,10 +126,10 @@ shard分类
     - 解决数据高可用的问题, 当某个住分片丢失或者损坏时, 不会导致数据丢失, 也不会影响对分片的读写( horizontally split/scale your content volume)
     - 副本个数可以动态改变
     - 增加副本数量, 可以提高读取的吞吐量.( distribute and parallelize operations across shards)
-
-the master node will not assign a primary shard to the same node as its replica.
-
-the master node will not assign two replicas of the same shard to the same node. 
+    - the master node will not assign a primary shard to the same node as its replica.
+    - the master node will not assign two replicas of the same shard to the same node.
+    - the max number of a replica shard is N -1, where N is the number of nodes.
+    - 当某个primary shard丢失或损坏时, 对应的某个replica shard能够瞬间被标记成primary shard.
 
 考虑三个节点时:
 - 每个index设定一个shard, 每个shard有一个replica: shard和replica可以分配到不同的node上, 集群 green
@@ -144,14 +146,16 @@ keep in mind: N(Node) >= R(Replica) + 1, shard 的个数不会影响allocation�
 
 use `get /_cluster/allocation/explain?pretty` to see why replica are not allocated.
 
-shard(主分片) 容量规划
-
-- shard 数量太小
+primary shard 容量规划
+- primary shard 数量太小
     - 因为不能动态调整分片数量, 当数据越来越多时,数据只能分布在现有的分片中, 最终导致每个分片的数据量过大
         - 数据量过大会有什么问题?
-            - 数据分配时更加耗时
-- shard 数量过大
-        - 
+            - 当数据两超过了磁盘大小, 扩展比较困难.
+- primary shard 数量过大
+        - 导致单个节点上有过多分片, 影响性能
+replica shard 容量规划
+- replica shard 过多
+    - 降低文档的写入性能(因为文档写入时会同步先写primary shard, 再写replica shard, 然后再把结果返回给客户端)
             
             
 https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch

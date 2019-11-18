@@ -1,3 +1,4 @@
+# index API
 ## get all indices
 
 ```
@@ -112,6 +113,8 @@ GET movies
 ```bash
 GET movies/_count
 ```
+
+# index concept
 
 ## removal of index types
 
@@ -555,3 +558,127 @@ when there are new fileds in the request:
 
 
 ```
+
+# index template
+
+Index templates allow you to define templates that will automatically be applied when new indices are created.
+
+## create a template
+
+```
+PUT _template/t1 
+{
+    "index_patterns":[
+        "example*",
+        "test*"
+    ],
+    "settings":{
+        "index":{
+            "number_of_shards":3,
+            "number_of_replicas":2
+        },
+        "analysis":{
+            "char_filter":{
+                "&_to_and":{
+                    "type":"mapping",
+                    "mappings":[
+                        "&=> and "
+                    ]
+                }
+            },
+            "filter":{
+                "my_stopwords":{
+                    "type":"stop",
+                    "stopwords":[
+                        "the",
+                        "a"
+                    ]
+                }
+            },
+            "analyzer":{
+                "my_analyzer":{
+                    "type":"custom",
+                    "char_filter":[
+                        "html_strip",
+                        "&_to_and"
+                    ],
+                    "tokenizer":"standard",
+                    "filter":[
+                        "lowercase",
+                        "my_stopwords"
+                    ]
+                }
+            }
+        }
+    },
+    "mappings":{
+        "properties":{
+            "name":{
+                "type":"text",
+                "analyzer":"my_analyzer",
+                "search_analyzer":"standard"
+            },
+            "sex":{
+                "type":"keyword"
+            },
+            "age":{
+                "type":"integer"
+            },
+            "weight":{
+                "type":"float"
+            },
+            "phone":{
+                "type":"text",
+                "index":false
+            }
+        }
+    }
+}
+```
+
+## check the template
+
+```
+GET /_template
+GET /_template/t1
+GET /_template/t*
+GET /_template/t1,t2
+
+```
+## delete a template
+
+```
+DELETE /_template/t1
+
+```
+
+## multiple templates matching
+
+Multiple index templates can potentially match an index, in this case, both the settings and mappings are merged into the final configuration of the index. The order of the merging can be controlled using the order parameter, with lower order being applied first, and higher orders overriding them
+
+```
+PUT /_template/t1
+{
+    "index_patterns" : ["*"],
+    "order" : 0,
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "_source" : { "enabled" : false }
+    }
+}
+
+PUT /_template/template_2
+{
+    "index_patterns" : ["test*"],
+    "order" : 1,
+    "settings" : {
+        "number_of_shards" : 2
+    },
+    "mappings" : {
+        "_source" : { "enabled" : true }
+    }
+}
+```
+The above will disable storing the *_source* , but for indices that start with *test*, *_source* will still be enabled, and number_of_shards would be set as 2

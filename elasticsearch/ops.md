@@ -32,6 +32,7 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 
 #### node role
 - master node
+    - only master node can create/delete or update index information.
     - only master node can change the cluster state information(even though all nodes has a copy of cluster information)
         - cluster information
             - all nodes information
@@ -56,6 +57,16 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 日志类型的应用, 旧日志用配置低的机型, 用于节省成本.
 
 see https://www.elastic.co/blog/implementing-hot-warm-cold-in-elasticsearch-with-index-lifecycle-management
+
+### cluster discovery
+- ES 内部是通过一个相同的设置 cluster.name 就能将不同的节点连接到同一个集群的.
+- 不需要在配置文件中包含集群中的所有节点, 当一个节点联系到一个集群成员时，它就会得到整个集群所有节点的状态，然后它会联系 Master节点，并加入集群
+
+### cluster master election
+
+- 只有eligible master 节点参与选举
+- 节点ID最小的成为master
+- 如果一个集群中eligible master节点个数小于 discovery.zen.minimum_master_nodes , 那么不允许选举, 防止发生脑裂问题.
 
 ### cluster health
 

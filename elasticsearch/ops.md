@@ -198,8 +198,3 @@ https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-prac
 https://www.oreilly.com/ideas/10-elasticsearch-metrics-to-watch
 https://www.elastic.co/guide/en/elasticsearch/guide/master/indexing-performance.html
 
-
-### troubleshooting
-
-#### 429 error
-the cluster is busy

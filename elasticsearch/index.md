@@ -126,7 +126,7 @@ after 7.0, type can only be `_doc`, see https://www.elastic.co/guide/en/elastics
 ## the inverted index
 
 the Inverted index consists of a term dictionary and a posting list(倒排列表)
-- [term index](https://mp.weixin.qq.com/s?__biz=MzIxMTE0ODU5NQ==&mid=2650238503&idx=2&sn=9a6e7ab163b35adf4141ec5163daddc3&chksm=8f5a047bb82d8d6dbbd94b92e7abd08cda17486ed66f906aab1e66e9842514bfce30edcc7c4c&mpshare=1&scene=1&srcid=1114kFFCNgrKKgimVyHoTzHA&sharer_sharetime=1573697488640&sharer_shareid=e73f9de7081cb71c0cf010095d6cdf66#rd) 
+- term index
 - term dictionary
     - B+ tree or HashMap to keep the term
 - posting list
@@ -151,7 +151,15 @@ the structure of reverse index seems like below:
 | java     | 1      |   2:2:<6,9> |
 | elasticsearch | 1      | 3:2:<6:17> |
 
+#### Term index
 ![term index](./term-index.jpeg)
+
+term dictionary cannot be stored into memory because it is too huge, to keep the index in memory, ES introduces a term index.
+
+the term index only keeps the prefix of indices instead of all terms.
+it locate the offset of a term in term directory, then search on term directory.
+
+the term index is also compressed by [FST](https://web.stanford.edu/~laurik/publications/pmatch.pdf), will make the term index even more smaller(but it takes more CPU time for uncompression)
     
 ### the reverse index in Elasticsearch
 

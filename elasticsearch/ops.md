@@ -79,7 +79,7 @@ GET /_cluster/health/movies?level=shards
 ```
 green: 主分片和副本都正常分配
 yellow: 主分片正常分配, 副本分配未能正常分配
-red: 有主分片未能正常分配, 例如,在磁盘容量少于15%时尝试创建index
+red: 有主分片未能正常分配, 例如,在磁盘容量少于15%时尝试创建index. red cluster can still serve for the requests in a degrade mode.
 
 ### shards and replicas
 
@@ -147,23 +147,36 @@ keep in mind: N(Node) >= R(Replica) + 1, shard 的个数不会影响allocation�
 use `get /_cluster/allocation/explain?pretty` to see why replica are not allocated.
 
 primary shard 容量规划
-- primary shard 数量太小
+
+The key consideration as you allocate shards is your expectation for the growth of your dataset. 
+
+- primary shard 数量太少
     - 因为不能动态调整分片数量, 当数据越来越多时,数据只能分布在现有的分片中, 最终导致每个分片的数据量过大
         - 数据量过大会有什么问题?
-            - 当数据两超过了磁盘大小, 扩展比较困难.
-- primary shard 数量过大
-        - 导致单个节点上有过多分片, 影响性能
+            - 当数据量超过了磁盘大小, 扩展比较困难.
+- primary shard 数量太多
+        - a shard is a Lucene index, it consumes file handles, memory, and CPU resources, when there are too many shards but less nodes, contention arises and performance decreases when the shards are competing for the same hardware resources.
+        - Elasticsearch uses [term frequency statistics to calculate relevance](https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-intro.html), but these statistics correspond to individual shards. Maintaining only a small amount of data across a many shards will result in poor document relevance
+- primary shard size 太大
+    - having very large shards can affect the cluster's ability to recover from failure, during a failure, ES will try to rebalance the shards across all nodes.
 replica shard 容量规划
 - replica shard 过多
     - 降低文档的写入性能(因为文档写入时会同步先写primary shard, 再写replica shard, 然后再把结果返回给客户端)
-            
-            
-https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch
 
-https://www.elastic.co/guide/en/elasticsearch/reference/6.2/_basic_concepts.html
+strategy 1:
 
-### Running a cluster without replicas
-https://discuss.elastic.co/t/running-a-cluster-without-replicas/129846
+the ideal scenario as being one shard per index, per node.
+
+the maximum recommended JVM heap size for Elasticsearch is approximately 30GB, this is a solid estimate on the limit of your absolute maximum shard size. For example, if you really think it possible that you could reach 200GB (but not much further without other infrastructure changes), then we recommend an allocation of 7 shards, or 8 shards at most. you will have up to 7 or 8 nodes to get the ideal performance.
+
+stragegy 2:
+
+A good launch point for capacity planning is to allocate shards with a factor of 1.5 to 3 times the number of nodes in your initial configuration. 
+
+If you're starting with 3 nodes, then we recommend that you specify at most 3 x 3 = 9 shards.
+
+Simply add a node and ES will will rebalance the shards acccordingly when the document size increases carazily.
+
 
 ### segment
 
@@ -179,9 +192,12 @@ http://blog.httrack.com/blog/2013/11/15/everything-you-always-wanted-to-know-abo
 https://qbox.io/blog/refresh-flush-operations-elasticsearch-guide
 
 ### segment merge
- every search request has to check every segment in turn; the more segments there are, the slower the search will be.
+
+every search request has to check every segment in turn; the more segments there are, the slower the search will be.
 
 Elasticsearch solves this problem by merging segments in the background. Small segments are merged into bigger segments
+
+As all segments are immutable, this means that the disk space used will typically fluctuate during indexing, as new, merged segments need to be created before the ones they replace can be deleted. Merging can be quite resource intensive, especially with respect to disk I/O.
 
 https://www.elastic.co/guide/en/elasticsearch/guide/current/merge-process.html
 
@@ -196,5 +212,9 @@ The merge process selects a few segments of similar size and merges them into a 
 
 https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/
 https://www.oreilly.com/ideas/10-elasticsearch-metrics-to-watch
-https://www.elastic.co/guide/en/elasticsearch/guide/master/indexing-performance.html
+https://github.com/jlchn/notes/blob/master/elasticsearch/tunning.md
 
+### references
+https://qbox.io/blog/optimizing-elasticsearch-how-many-shards-per-index
+https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-intro.html
+https://www.elastic.co/guide/en/elasticsearch/reference/6.2/_basic_concepts.html

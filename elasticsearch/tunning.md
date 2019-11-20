@@ -178,6 +178,14 @@ keywork is better than long integer for search
 
 ## norms, doc_values, \_source, field, score calculation
 
+```
+FieldData
+线上查询出现偶尔超时的情况，通过调试查询语句，定位到是跟排序有关系。排序在es1.x版本使用的是FieldData结构，FieldData占用的是JVM Heap内存，
+如果空间不足时，使用最久未使用（LRU）算法移除FieldData，同时加载新的FieldData Cache，加载的过程需要消耗系统资源，且耗时很大。所以导致这个查询的响应时间暴涨，甚至影响整个集群的性能。针对这种问题，解决方式是采用Doc Values。
+Doc Values
+Doc Values是一种列式的数据存储结构，跟FieldData很类似，但其存储位置是在Lucene文件中，即不会占用JVM Heap。随着ES版本的迭代，Doc Values比FieldData更加稳定，Doc Values在2.x起为默认设置。
+```
+
 # more to read
 
 https://github.com/fdv/running-elasticsearch-fun-profit/blob/master/007-monitoring-es/007-monitoring-es.md

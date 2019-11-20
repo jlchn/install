@@ -116,9 +116,17 @@ https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cl
 
 https://www.elastic.co/guide/en/elasticsearch/guide/2.x/scale.html
 
+## replica number
+
+If you have a cluster that has num_nodes nodes, num_primaries primary shards in total and if you want to be able to cope with max_failures node failures at once at most, then the right number of replicas is: 
+```
+replica number = max（max_failures，ceil（num_nodes /num_primaries） -  1）
+```
+
 # references
 
 - [tunning for index speed](https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-indexing-speed.html)
 - [tunning for disk usage](https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-disk-usage.html)
 - [ES memory setup](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
--[How many shard should I have](https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster)
+- [How many shard should I have](https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster)
+- [the right replia number](https://www.elastic.co/guide/en/elasticsearch/reference/master/tune-for-search-speed.html)

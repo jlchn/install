@@ -126,6 +126,7 @@ after 7.0, type can only be `_doc`, see https://www.elastic.co/guide/en/elastics
 ## the inverted index
 
 the Inverted index consists of a term dictionary and a posting list(倒排列表)
+- [term index](https://mp.weixin.qq.com/s?__biz=MzIxMTE0ODU5NQ==&mid=2650238503&idx=2&sn=9a6e7ab163b35adf4141ec5163daddc3&chksm=8f5a047bb82d8d6dbbd94b92e7abd08cda17486ed66f906aab1e66e9842514bfce30edcc7c4c&mpshare=1&scene=1&srcid=1114kFFCNgrKKgimVyHoTzHA&sharer_sharetime=1573697488640&sharer_shareid=e73f9de7081cb71c0cf010095d6cdf66#rd) 
 - term dictionary
     - B+ tree or HashMap to keep the term
 - posting list
@@ -705,3 +706,6 @@ introduced in 6.x: https://www.elastic.co/cn/blog/index-sorting-elasticsearch-6-
 
 specify `index.sort.*` will sort the data in the segment while writing data to the shard
 
+## more to read
+
+https://mp.weixin.qq.com/s?__biz=MzIxMTE0ODU5NQ==&mid=2650238503&idx=2&sn=9a6e7ab163b35adf4141ec5163daddc3&chksm=8f5a047bb82d8d6dbbd94b92e7abd08cda17486ed66f906aab1e66e9842514bfce30edcc7c4c&mpshare=1&scene=1&srcid=1114kFFCNgrKKgimVyHoTzHA&sharer_sharetime=1573697488640&sharer_shareid=e73f9de7081cb71c0cf010095d6cdf66#rd

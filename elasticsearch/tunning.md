@@ -100,7 +100,22 @@ Elasticsearch allows complete indices to be deleted very efficiently directly fr
       - forcing smaller segments to merge into larger ones through a forcemerge operation can reduce overhead and improve query performance. This should ideally be done once no more data is written to the index. Be aware that this is an expensive operation that should ideally be performed during off-peak hours.
   - large cluster information makes the update operation slow
     - all updates need to be done through a single thread in order to guarantee consistency before the changes are distributed across the cluster.
-  
+ 
+## shard side too large or too small 
+n Elasticsearch, each query is executed in a single thread per shard. Multiple shards can however be processed in parallel, as can multiple queries and aggregations against the same shard.
+
+This means that the minimum query latency, when no caching is involved, will depend on the data, the type of query, as well as the size of the shard. Querying lots of small shards will make the processing per shard faster, but as many more tasks need to be queued up and processed in sequence, it is not necessarily going to be faster than querying a smaller number of larger shards. Having lots of small shards can also reduce the query throughput if there are multiple concurrent queries.
+
+The best way to determine the maximum shard size from a query performance perspective is to benchmark using realistic data and queries. Always benchmark with a query and indexing load representative of what the node would need to handle in production, as optimizing for a single query might give misleading results.
+
+## shrink or rollover the shard to a good size for you
+
+https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster
+
+## design for scale
+
+https://www.elastic.co/guide/en/elasticsearch/guide/2.x/scale.html
+
 # references
 
 - [tunning for index speed](https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-indexing-speed.html)

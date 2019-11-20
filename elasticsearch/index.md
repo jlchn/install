@@ -150,6 +150,8 @@ the structure of reverse index seems like below:
 | hello      | 3 | 1:1:<0,4>,2:1:<0,4>,3:1:<0,4> |
 | java     | 1      |   2:2:<6,9> |
 | elasticsearch | 1      | 3:2:<6:17> |
+
+!["term index"]("./term-index.jped" "")
     
 ### the reverse index in Elasticsearch
 

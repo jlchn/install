@@ -1,3 +1,12 @@
+# how to find the primary shard for write or read
+
+```
+shard = hash(routing) % number_of_primary_shards
+```
+the routing is the document id by default.
+
+this is why we need to re-index after changing the `number_of_primary_shards` after index created
+
 # write
 
 - request comes

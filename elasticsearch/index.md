@@ -683,3 +683,25 @@ PUT /_template/template_2
 }
 ```
 The above will disable storing the *_source* , but for indices that start with *test*, *_source* will still be enabled, and number_of_shards would be set as 2
+
+# alias
+
+you can define an alias for more than one indices, searching on the alias is like search on a single index
+
+this is useful if you have time-based index.
+
+# index sorting
+
+introduced in 6.x: https://www.elastic.co/cn/blog/index-sorting-elasticsearch-6-0
+
+```
+"settings" : {
+         "index" : {
+             "sort.field" : "date", 
+             "sort.order" : "desc" 
+         }
+     }
+ ```
+
+specify `index.sort.*` will sort the data in the segment while writing data to the shard
+

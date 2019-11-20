@@ -155,10 +155,32 @@ To solve the performance problems we investigated a recommendation that Elastic 
 
 For our use case it made sense to make shards as big as possible. We reduced the number of shards per year from 1825 to 60 reducing query cost and latency on average by 90%.
 ```
+## avoid leading wildcards or regex
 
 ## reference routing
 
 the same requests may go to different nodes if you requests multiple times, this is not good for cache utilization.
+
+## avoid join operation
+
+- nested search is 10 times slower than normal search
+- parent-child search 100 times slower than normal search.
+
+## avoid range operation
+
+## use keyword as long as you can
+
+keywork is better than long integer for search
+
+## use scroll instead of from&size
+
+## norms, doc_values, \_source, field, score calculation
+
+# more to read
+
+https://github.com/fdv/running-elasticsearch-fun-profit/blob/master/007-monitoring-es/007-monitoring-es.md
+
+https://www.slideshare.net/fdevillamil/running-scaling-large-elasticsearch-clusters-81015284
 
 
 # references

@@ -84,6 +84,23 @@ segments are immutable
 
 Elasticsearch allows complete indices to be deleted very efficiently directly from the file system, without explicitly having to delete all records individually. This is by far the most efficient way to delete data from Elasticsearch.
 
+## avoid large cluster state information
+
+ It is important to find a good balance between the number of indices and shards, and the mapping size for each individual index
+ 
+- [cluster state](https://www.elastic.co/guide/en/elasticsearch/guide/2.x/finite-scale.html#finite-scale)
+  - stores mappings of indices
+  - stores data structures holding information at the shard level
+  - stores data structures holding information at the segment level(where data reside on disk)
+  - stores cluster node information.
+
+- the cluster state is loaded into memeory(the JVM heap) on every node 
+  - it is important to manage heap usage and reduce the amount of cluster information as much as possible. The more heap space a node has, the more shards it can handle.
+    - Small shards result in small segments, which increases more cluster inforamtion.
+      - forcing smaller segments to merge into larger ones through a forcemerge operation can reduce overhead and improve query performance. This should ideally be done once no more data is written to the index. Be aware that this is an expensive operation that should ideally be performed during off-peak hours.
+  - large cluster information makes the update operation slow
+    - all updates need to be done through a single thread in order to guarantee consistency before the changes are distributed across the cluster.
+  
 # references
 
 - [tunning for index speed](https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-indexing-speed.html)

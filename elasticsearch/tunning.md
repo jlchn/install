@@ -186,6 +186,19 @@ Doc Values
 Doc Values是一种列式的数据存储结构，跟FieldData很类似，但其存储位置是在Lucene文件中，即不会占用JVM Heap。随着ES版本的迭代，Doc Values比FieldData更加稳定，Doc Values在2.x起为默认设置。
 ```
 
+## disable norms 
+
+norms also require quite a lot of memory (typically in the order of one byte per document per field in your index, even for documents that do not have this specific field). 
+
+if you do not need scoring on a specific field, you should disable norms on that field.
+
+especially when fields that are used only for filtering or aggregations.
+```
+"title": {
+      "type": "text",
+      "norms": false
+    }
+```
 ## disable \_source
 
 a number of features are not supported if it is disbled:

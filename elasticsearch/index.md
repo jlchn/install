@@ -151,7 +151,7 @@ the structure of reverse index seems like below:
 | java     | 1      |   2:2:<6,9> |
 | elasticsearch | 1      | 3:2:<6:17> |
 
-!["term index"]("./term-index.jped" "")
+![term index](./term-index.jpeg)
     
 ### the reverse index in Elasticsearch
 

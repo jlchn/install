@@ -34,9 +34,11 @@ this is why we need to re-index after changing the `number_of_primary_shards` af
  
 # segment merge
 
-## what is segment?
-
-segment is a lucene inverted index.
+## what are in segment?
+- lucene inverted index.
+- stored fields
+- document values: for sort and aggregations
+- cache
 
 segment is immutable.
 

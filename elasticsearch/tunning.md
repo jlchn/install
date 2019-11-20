@@ -97,7 +97,6 @@ Elasticsearch allows complete indices to be deleted very efficiently directly fr
 - the cluster state is loaded into memeory(the JVM heap) on every node 
   - it is important to manage heap usage and reduce the amount of cluster information as much as possible. The more heap space a node has, the more shards it can handle.
     - Small shards result in small segments, which increases more cluster inforamtion.
-      - forcing smaller segments to merge into larger ones through a forcemerge operation can reduce overhead and improve query performance. This should ideally be done once no more data is written to the index. Be aware that this is an expensive operation that should ideally be performed during off-peak hours.
   - large cluster information makes the update operation slow
     - all updates need to be done through a single thread in order to guarantee consistency before the changes are distributed across the cluster.
  
@@ -122,6 +121,35 @@ If you have a cluster that has num_nodes nodes, num_primaries primary shards in 
 ```
 replica number = max（max_failures，ceil（num_nodes /num_primaries） -  1）
 ```
+## force merge  segments of readonly replicas
+
+Reduce segment number is good for search performance.
+
+This should ideally be done once no more data is written to the index. Be aware that this is an expensive operation that should ideally be performed during off-peak hours.
+
+by specifing `preference` in the search requests, the requests will go to the same node. 
+
+```
+
+GET /_search?preference=abcedf
+{
+    "query": {
+        "match": {
+            "title": "es"
+        }
+        }
+}
+```
+
+# tunning search
+
+https://www.elastic.co/guide/en/elasticsearch/reference/6.7/tune-for-search-speed.html
+
+## reference routing
+
+the same requests may go to different nodes if you requests multiple times, this is not good for cache utilization.
+
+
 
 # references
 

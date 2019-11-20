@@ -172,11 +172,13 @@ the same requests may go to different nodes if you requests multiple times, this
 
 ## use keyword as long as you can
 
-keywork is better than long integer for search
+keyword will not be analyzed during the index operation.
+
+keyword is better than long integer for search(why?)
 
 ## use scroll instead of from&size
 
-## norms, doc_values, \_source, field, score calculation
+## doc_values
 
 ```
 FieldData
@@ -185,6 +187,8 @@ FieldData
 Doc Values
 Doc Values是一种列式的数据存储结构，跟FieldData很类似，但其存储位置是在Lucene文件中，即不会占用JVM Heap。随着ES版本的迭代，Doc Values比FieldData更加稳定，Doc Values在2.x起为默认设置。
 ```
+
+too save the disk, you can disable doc_values if there would be no aggreation and sort actions on fields.
 
 ## disable norms 
 
@@ -210,6 +214,10 @@ a number of features are not supported if it is disbled:
 
 
 If disk space is a concern, rather increase the compression level instead of disabling the \_source
+
+# JVM
+
+keep `Xms` and `Xmx` the same value to avoid memory ES re-allocation
 
 # more to read
 

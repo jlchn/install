@@ -78,6 +78,8 @@ SSD drives better than spinning disks
 
 # tunning disk usage
 
+https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-disk-usage.html
+
 ##  use time-based indices
 
 segments are immutable
@@ -123,7 +125,7 @@ If you have a cluster that has num_nodes nodes, num_primaries primary shards in 
 ```
 replica number = max（max_failures，ceil（num_nodes /num_primaries） -  1）
 ```
-## force merge  segments of readonly replicas
+## force merge segments of readonly replicas
 
 Reduce segment number is good for search performance.
 

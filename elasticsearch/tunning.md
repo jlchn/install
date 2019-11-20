@@ -74,8 +74,19 @@ By using auto-generated ids, Elasticsearch can skip this check, which makes inde
 
 SSD drives better than spinning disks
 
+# tunning disk usage
+
+##  use time-based indices
+
+segments are immutable
+ - updating a document requires Elasticsearch to first find the existing document, then mark it as deleted and add the updated version. 
+ - eleting a document also requires the document to be found and marked as deleted. For this reason, deleted documents will continue to tie up disk space and some system resources until they are merged out, which can consume a lot of system resources.
+
+Elasticsearch allows complete indices to be deleted very efficiently directly from the file system, without explicitly having to delete all records individually. This is by far the most efficient way to delete data from Elasticsearch.
+
 # references
 
 - [tunning for index speed](https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-indexing-speed.html)
 - [tunning for disk usage](https://www.elastic.co/guide/en/elasticsearch/reference/current/tune-for-disk-usage.html)
 - [ES memory setup](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
+-[How many shard should I have](https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster)

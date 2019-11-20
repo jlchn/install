@@ -34,16 +34,40 @@ this is why we need to re-index after changing the `number_of_primary_shards` af
  
 # segment merge
 
+## what is segment?
+
+segment is a lucene inverted index.
+
+segment is immutable.
+
+## what are write the operations on segments?
+
+- add new documents
+  - add a new segment to store new documents
+- delete documents
+  - add a delete record in a `.del` file, any search actions will use this file to filter out the deleted documents.
+- update documents
+  - mark the current documents as `deleted` in the `.del` file, then create new documents in a new segment.
+## the good and bad of immutable segment
+
+- the good 
+  - No lock: an Elasticsearch index would have many segments, searching on these immutable segments will are faster than the mutable case.
+  - Good for filesystem cache, no need to swap in or out when updates happens.
+- the bad
+  - it takes more disk to keep the deleted documents.
+
+## what is segemnt merge?
+
  merge many segment files to a larger one.
  
- ## what does segment merge do?
+## what does segment merge do?
  
 - create a new segment, this segment contains several existing old segments.
 - open this segment to make it visible for searches.
 - delete the old segments
 - the documents marked as `deleted` will be deleted directly in this action.
 
- ## what do you need segment merge?
+## what do you need segment merge?
  
 - each segment should be open for search, when there are too many segments, there would be more opeing files which may reach the opening-file-limit(if you didn't set it to unlimited)
 - while searching a shard, ES will search all segments one by one(or with limited parallel). if there are too many segments, the search would be slow, especially when there are too many search actions queued.

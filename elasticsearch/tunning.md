@@ -1,3 +1,5 @@
+
+
 # tune for index speed
 
 ## use bulk request
@@ -145,10 +147,18 @@ GET /_search?preference=abcedf
 
 https://www.elastic.co/guide/en/elasticsearch/reference/6.7/tune-for-search-speed.html
 
+## fewer shards
+searching over a lot of shards is quite expensive.
+
+```
+To solve the performance problems we investigated a recommendation that Elastic Support made to us early on: Reducing the number of shards. If you store time based events, be it news articles or log events, it is a common pattern to use date based indices. We started of with daily indices so that for example all news articles that have been published on the 29th of April 2018 would be stored in an index named articles-20180429. This means that, when you search over one year of data and you are using the default of 5 shards per index, Elasticsearch would have to search over 1825 shards. We learned that searching over a lot of shards is quite expensive. Indeed, up to some point, the cost for searching a fixed number of documents went up linearly with the number of shards involved. How to split up data across indices and shards most efficiently depends on many factors.
+
+For our use case it made sense to make shards as big as possible. We reduced the number of shards per year from 1825 to 60 reducing query cost and latency on average by 90%.
+```
+
 ## reference routing
 
 the same requests may go to different nodes if you requests multiple times, this is not good for cache utilization.
-
 
 
 # references
@@ -158,3 +168,5 @@ the same requests may go to different nodes if you requests multiple times, this
 - [ES memory setup](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
 - [How many shard should I have](https://www.elastic.co/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster)
 - [the right replia number](https://www.elastic.co/guide/en/elasticsearch/reference/master/tune-for-search-speed.html)
+- [fewer shards, more performance](
+https://www.elastic.co/cn/blog/signal-media-optimizing-for-more-elasticsearch-power-with-less-elasticsearch-cluster)

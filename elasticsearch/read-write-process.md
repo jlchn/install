@@ -15,8 +15,7 @@
   - write segment files(in memory cache) to the disk(as disk segment file)
   - performed by default every 30 min or when the translog gets too big (default is 512MB).
   
-- merge 
-  - merge many segment files to a larger one.
+
   
  # read
 - the coordinating node resolves the read requests
@@ -24,3 +23,24 @@
 - send shard level read requests to the selected copies.  
 - combine the results and respond. in the case of get by ID look up, only one shard is relevant and this step can be skipped.
  
+# segment merge
+
+ merge many segment files to a larger one.
+ 
+ ## what does segment merge do?
+ 
+- create a new segment, this segment contains several existing old segments.
+- open this segment to make it visible for searches.
+- delete the old segments
+- the documents marked as `deleted` will be deleted directly in this action.
+
+ ## what do you need segment merge?
+ 
+- each segment should be open for search, when there are too many segments, there would be more opeing files which may reach the opening-file-limit(if you didn't set it to unlimited)
+- while searching a shard, ES will search all segments one by one(or with limited parallel). if there are too many segments, the search would be slow, especially when there are too many search actions queued.
+- reduce the size of cluster state information.
+- get more disk because the `deleted` documents will be physical deleted from disk.
+
+## side effect of segment merge
+
+- high IO while merging

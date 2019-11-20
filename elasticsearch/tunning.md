@@ -186,6 +186,18 @@ Doc Values
 Doc Values是一种列式的数据存储结构，跟FieldData很类似，但其存储位置是在Lucene文件中，即不会占用JVM Heap。随着ES版本的迭代，Doc Values比FieldData更加稳定，Doc Values在2.x起为默认设置。
 ```
 
+## disable \_source
+
+a number of features are not supported if it is disbled:
+- the update, update_by_query, and reindex APIs.
+- highlighting.
+- reindex from one Elasticsearch index to another
+- change mappings or analysis
+- upgrade an index to a new major version.
+
+
+If disk space is a concern, rather increase the compression level instead of disabling the \_source
+
 # more to read
 
 https://github.com/fdv/running-elasticsearch-fun-profit/blob/master/007-monitoring-es/007-monitoring-es.md

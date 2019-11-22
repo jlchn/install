@@ -22,9 +22,11 @@
   TF    0.3   0.4   0.5
  
   ```
-so TF * IDF for each documents are:  0.3 * log(10 / (3 + 1)), 0.4 * log(10 / (4 + 1)), 0.5 * log(10 / (5 + 1))
+so TF * IDF for each documents are:  0.3 * log(10 / (3 + 1)), 0.4 * log(10 / (3 + 1)), 0.5 * log(10 / (3 + 1))
 
 TF * IDF is the final score for each documents for this search.
+
+for more clarification about TF and IDF, check: https://blog.csdn.net/qq_20989105/article/details/82685162
 
 # BM25
 

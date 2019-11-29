@@ -1,5 +1,7 @@
 # concepts 
 
+it is a NoSql.
+
 | InfluxDB        | RDB           |
 | ----------------| -------------:|
 | database        | database      | 
@@ -122,7 +124,7 @@ CREATE RETENTION POLICY "one_day_only" ON "weather" DURATION 1d REPLICATION 2
 DROP RETENTION POLICY "one_day_only" ON  "weather"
 
 reference: https://docs.influxdata.com/influxdb/v1.7/query_language/functions/
-
+```
 
 # index management
 
@@ -180,3 +182,60 @@ max-index-log-file-size = "1m"
     - to update a point, insert one with the same measurement, tag set, and timestamp.
 - delete a point
     - point cannot be deleted by field values, but can be deleted by timestamps
+
+
+# Storage Engine Component
+
+- in-memory index
+- WAL
+    - allows for writes to be durable, but not easily queryable.
+    - writes to the WAL are appended to segments of a fixed size.
+    - organized as a bunch of files that look like _000001.wal
+        - file numbers are increasing and referred to as WAL segments
+        - when a segment reaches 10MB in size, it is closed and a new one is opened.
+- Cache
+    - it is an in-memory representation of the data stored in the WAL.
+    - queries to the storage engine will merge data from the Cache with data from the TSM files. 
+    - Cache is recreated on restart by re-reading the WAL files on disk.
+- TSM(Time-Structured Merge Tree)
+    - store compressed series data in a columnar format
+    - it is similar to LSM(Log Structrued Merge) tree
+- FileStore
+    - The FileStore mediates access to all TSM files on disk. 
+    - It ensures that TSM files are installed atomically when existing ones are replaced as well as removing TSM files that are no longer used.
+- Compactor
+    - compressing series, removing deleted data, optimizing indices and combining smaller files into larger ones.
+- Compaction Planner 
+    - The Compaction Planner determines which TSM files are ready for a compaction and ensures that multiple concurrent compactions do not interfere with each other.
+- Compression
+    - handled by various Encoders and Decoders for specific data types.
+- Writers/Readers 
+    - read or write each file type (WAL segment, TSM files, tombstones, etc..)
+
+
+
+# InfluxDB vs RDB: can RDB be used as time series DB?
+
+time series database should be able to accept a `continuous` `large` number QPS
+
+there are very less query opertions than write operations, but it should be quick to aggreate the data while query.
+
+- schema
+    - influxDB don't need to define schema, it is flexbile to add tags and fileds on the air
+    - for RDB, the schema must be defined first, if we want to add tags or fields, we have to alter the schema
+- data write: 
+    - there won't too much performance difference on data writes
+        - InfluxDB append the new data in the memory
+            - InfluxDB use TSM(which is similar to LSM tree) tree, LSM is widely used in distributed database
+                - LSM use a memTable(in memory) and a ssTable(on the disk)
+                - new data will be kept in memTable for a long time(compared with data in B+tree), then merged to ssTable later.
+                - LSM usually need more memory to keep as more data as it can
+                - data is sorted in memory instead of disk, then appended to the disk.
+        - by using the timestamp as primary, RDB will append the new data to B+ tree 
+            - a large amount of ramdom insert/updates requires the re-construction of B+ tree very frequently, in this case, B+ tree has bad performance, but append to B+ tree is faster
+    - while using RDB, we need to care about how do to split the dataset and how to route the write requests
+- data query: 
+    - query on InfluxDB is slower than in RDB
+        - InfluxDB will merge the data from memory and disk, do some calculation, then return to clients.
+    - while using RDB, we need to care about how to route query requests
+

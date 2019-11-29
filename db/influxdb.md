@@ -167,7 +167,7 @@ max-index-log-file-size = "1m"
     - Higher sizes will be compacted less frequently, store more series in-memory, and provide higher write throughput. 
 
 
-# different from RDB
+# different usage from RDB
 
 - time series data is generally written once and rarely updated
 - schema

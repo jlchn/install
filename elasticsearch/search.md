@@ -773,7 +773,38 @@ POST /bookdb_index/book/_search
 }
 
 ```
+# explain
 
+```
+GET /tmdb/_validate/query?explain
+{
+  "query": {
+        "multi_match" : {                   
+            "query" : "alien Resurrection",
+            "fields": ["title^10", "overview"]
+            
+        }
+    }
+}
+
+[output]
+{
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "valid" : true,
+  "explanations" : [
+    {
+      "index" : "tmdb",
+      "valid" : true,
+      "explanation" : "((overview:alien overview:resurrect) | (title:alien title:resurrect)^10.0)"
+    }
+  ]
+}
+
+```
 # References
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html
